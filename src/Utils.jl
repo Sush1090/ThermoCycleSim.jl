@@ -48,7 +48,7 @@ end
 """
 Mass source -  Use when the cycle needs a start point. Requires initial temperature,pressure and Massflowrate
 """
-function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5) 
+function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5,fluid) 
     @named port = CoolantPort()
     para = @parameters begin
 
@@ -79,7 +79,7 @@ end
 """
 Mass sink -  Use when the cycle needs a end point. Sets the final port input values to the variables
 """
-function MassSink(;name) 
+function MassSink(;name,fluid) 
     @named    port = CoolantPort()
     para = @parameters begin
         
@@ -94,7 +94,6 @@ function MassSink(;name)
      end
 
    eqs = [
-    port.mdot ~ source_mdot # Outflow is negative
     port.p ~ p
     port.h ~ h
     mdot ~ port.mdot

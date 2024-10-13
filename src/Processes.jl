@@ -1,21 +1,21 @@
 
 using CoolProp, ModelingToolkit
 
-"""
-`IsentropicCompression(πc, h_in, p_in,fluid)`
+# """
+# `IsentropicCompression(πc, h_in, p_in,fluid)`
 
-    Arguments:
-    1. `πc`  : Pressure Ratio
-    2. `h_in`: Inlet Enthalpy
-    3. `p_in`: Inlet Pressure
+#     Arguments:
+#     1. `πc`  : Pressure Ratio
+#     2. `h_in`: Inlet Enthalpy
+#     3. `p_in`: Inlet Pressure
 
-    Output -> Outlet enthalpy after isentropic compression
-"""
-function IsentropicCompression(πc, h_in, p_in,fluid)
-    s = PropsSI("S", "H", h_in, "P", p_in, fluid)
-    return PropsSI("H", "S", s, "P", πc * p_in, fluid)
-end
-@register_symbolic IsentropicCompression(πc, h_in, p_in,fluid)
+#     Output -> Outlet enthalpy after isentropic compression
+# """
+# function IsentropicCompression(πc, h_in, p_in,fluid)
+#     s = PropsSI("S", "H", h_in, "P", p_in, fluid)
+#     return PropsSI("H", "S", s, "P", πc * p_in, fluid)
+# end
+# @register_symbolic IsentropicCompression(πc, h_in, p_in,fluid)
 
 """
 `IsentropicCompression(πc, h_in, p_in,fluid,η)`
@@ -39,21 +39,21 @@ end
 @register_symbolic IsentropicCompression(πc, h_in, p_in,fluid,η)
 export IsentropicCompression
 
-"""
-`IsentropicExpansion(πc, h_in, p_in,fluid)`
+# """
+# `IsentropicExpansion(πc, h_in, p_in,fluid)`
 
-* Arguments:
-    1. `πc`  : Pressure Ratio
-    2. `h_in`: Inlet Enthalpy
-    3. `p_in`: Inlet Pressure
+# * Arguments:
+#     1. `πc`  : Pressure Ratio
+#     2. `h_in`: Inlet Enthalpy
+#     3. `p_in`: Inlet Pressure
 
-* Output -> Outlet enthalpy after isentropic expansion
-"""
-function IsentropicExpansion(πc, h_in, p_in,fluid)
-    s = PropsSI("S", "H", h_in, "P", p_in, fluid)
-    return PropsSI("H", "S", s, "P", p_in/πc, fluid)
-end
-@register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid)
+# * Output -> Outlet enthalpy after isentropic expansion
+# """
+# function IsentropicExpansion(πc, h_in, p_in,fluid)
+#     s = PropsSI("S", "H", h_in, "P", p_in, fluid)
+#     return PropsSI("H", "S", s, "P", p_in/πc, fluid)
+# end
+# @register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid)
 
 
 """

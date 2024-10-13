@@ -7,8 +7,9 @@ This package combines ModelingToolkit.jl with CoolProp.jl to make basic thermody
 
     1. Organic Rakine Cycle
     2. Vapour Compression Cycle
+    3. Brayton Cycle
 
-It is for steady state calculations, hence the evaporators and compressors are  not only modeled using energy conservation. 
+It is for steady state calculations, hence the evaporators and compressors are  not only modeled using energy conservation. The principle is state-point manipulations.  
 
 It is extendible as users can add their own component in the following manner 
 
