@@ -32,3 +32,25 @@ end
 ```
 
 The `CoolantPort()` is fixed for the pressure `p`, enthalpy `h`, and mass flow rate `mdot`. The mass flow rate of the system is conserved throught the system. 
+
+
+It provides the following components:
+
+    1. Compressor using Isentropic Efficiency 
+    2. Expander using Isentropic Efficiency
+    3. Isenthalpic Expander 
+    4. Evaporator
+    5. Condensor
+    6. Heat Exchanger -  No phase change
+    7. Electric Heating
+
+It also provides basic functions that find the pressure to match the pitch points. 
+
+
+Example of Organic Rankine Cycle
+
+
+
+
+
+A phase ploting routine is provided for the given cycle. 
