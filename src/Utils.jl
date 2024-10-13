@@ -1,6 +1,6 @@
+using ModelingToolkit
 
-
-@independent_variables t
+ModelingToolkit.@independent_variables t
 D = Differential(t)
 const AtmosphericPressure = 101305 #Pa
 const AmbientTemperature = 300 #K
