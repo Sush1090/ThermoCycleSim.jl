@@ -11,16 +11,20 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
 @named comp = Compressor(comp_system, fluid =fluid)
+@named heatsrc = IsobaricHeatSource(Q_dot = 1e3,fluid = fluid)
 @named exp = Expander(comp_system,fluid= fluid)
+@named heatsnk = IsobaricHeatSink(Q_dot = 1e3,fluid = fluid)
 @named sink = MassSink(fluid = fluid)
 
 eqs = [
     connect(source.port,comp.inport)
-    connect(comp.outport,exp.inport)
-    connect(exp.outport,sink.port)
+    connect(comp.outport,heatsrc.inport)
+    connect(heatsrc.outport,exp.inport)
+    connect(exp.outport,heatsnk.inport)
+    connect(heatsnk.outport,sink.port)
 ]
 
-@named dis_test = ODESystem(eqs, t, systems=[source,comp,exp,sink])
+@named dis_test = ODESystem(eqs, t, systems=[source,comp,heatsrc,exp,heatsnk,sink])
 
 u0 = []
 tspan = (0.0, 10.0)
