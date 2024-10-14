@@ -6,7 +6,17 @@
     1. `type` : `Isentropic_η` contains --> isentropic effeiciency and pressure ratio parameters
     
 *    Local Variables:
-    1. `P` : Power required 
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
 
 *    Port Variables:
     1. `inport`  : `p` and `h`
