@@ -48,10 +48,16 @@ It provides the following components:
 It also provides basic functions that find the pressure to match the pitch points. 
 
 
+## Basic Usage
+
+## Example - ORC
+
 Example of Organic Rankine Cycle
 
 
 
-
+## Phase Plotting
 
 A phase ploting routine is provided for the given cycle. 
+
+## Basic Optimization
