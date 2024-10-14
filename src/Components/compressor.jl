@@ -53,9 +53,9 @@ function Compressor(type::Isentropic_η;name,fluid)
             h_in ~ inport.h
             ρ_in ~ PropsSI("D","H",inport.h,"P",inport.p,fluid)
             s_out ~ PropsSI("S","H",outport.h,"P",outport.p,fluid)
-            p_out ~ inport.p
+            p_out ~ outport.p
             T_out ~ PropsSI("T","H",outport.h,"P",outport.p,fluid)
-            h_out ~ inport.h
+            h_out ~ outport.h
             ρ_out ~ PropsSI("D","H",outport.h,"P",outport.p,fluid)
    ]
    compose(ODESystem(eqs, t, vars, para;name), inport, outport)
