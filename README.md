@@ -1,4 +1,4 @@
-# CoolPropCycles
+# CoolPropCycles.jl
 
 [![Build Status](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
@@ -50,13 +50,14 @@ It also provides basic functions that find the pressure to match the pitch point
 
 ## Basic Usage
 
-## Example - ORC
-
+## Examples 
+### Organic Rankine Cycle
 Example of Organic Rankine Cycle
 
+### Vapour Compression cycle
+Example of Vapour Compression
 
-
-## Phase Plotting
+## Phase Diagram Plotting
 
 A phase ploting routine is provided for the given cycle. 
 
