@@ -229,9 +229,9 @@ end
 
 function SimpleEvaporator(;name,fluid,Δp,ΔT_sh)
     @named inport = CoolantPort()
-    @named pre = Preheater(fluid = fluid,Δp= Δp/3) 
+    @named preheater = Preheater(fluid = fluid,Δp= Δp/3) 
     @named twophase = TwoPhase(fluid = fluid,Δp= Δp/3)
-    @named super = SuperHeat(fluid = fluid,Δp= Δp/3,ΔT_sh = ΔT_sh)
+    @named superheater = SuperHeat(fluid = fluid,Δp= Δp/3,ΔT_sh = ΔT_sh)
     @named outport = CoolantPort()
 
     para = @parameters begin
@@ -254,10 +254,10 @@ function SimpleEvaporator(;name,fluid,Δp,ΔT_sh)
         T_sat(t)
     end
     eqs = [
-    connect(inport,pre.inport)
-    connect(pre.outport,twophase.inport)
-    connect(twophase.outport,super.inport)
-    connect(super.outport,outport)
+    connect(inport,preheater.inport)
+    connect(preheater.outport,twophase.inport)
+    connect(twophase.outport,superheater.inport)
+    connect(superheater.outport,outport)
     T_sat ~ twophase.T_sat
     T_in ~ pre.T_in
     T_out ~ super.T_out
