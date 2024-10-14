@@ -42,7 +42,7 @@ It provides the following components:
     3. Isenthalpic Expander 
     4. Evaporator
     5. Condensor
-    6. Heat Exchanger -  No phase change
+    6. Heat Exchanger -  No phase change - Recuperator
     7. Electric Heating
 
 It also provides basic functions that find the pressure to match the pitch points. 
@@ -60,4 +60,4 @@ Example of Organic Rankine Cycle
 
 A phase ploting routine is provided for the given cycle. 
 
-## Basic Optimization
+## Basic Thermodynamic Cycle Optimization
