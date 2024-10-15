@@ -7,9 +7,9 @@ struct PhasePlotType_TS <: PhasePlotType end
 
 export PhasePlotType_PH,PhasePlotType_TS
 
-T(p,h,fluid) = PropsSI("T","P",p,"H",h,fluid)
-S(p,h,fluid) = PropsSI("S","P",p,"H",h,fluid)
-ρ(p,h,fluid) = PropsSI("D","P",p,"H",h,fluid)
+T_line(p,h,fluid) = PropsSI("T","P",p,"H",h,fluid)
+S_line(p,h,fluid) = PropsSI("S","P",p,"H",h,fluid)
+ρ_line(p,h,fluid) = PropsSI("D","P",p,"H",h,fluid)
 
 function LineData(f::Function,x1,y1,x2,y2,fluid::AbstractString;points = 100)
     x = collect(range(x1,x2,points))
@@ -53,9 +53,9 @@ function PhasePlot(type::PhasePlotType_TS,sol::ODESolution,system::Vector{ODESys
     for i = 1:size(pp,1)
         x1 = cycle_data_pp[i]; y1 = cycle_data_hh[i];
         x2 = cycle_data_pp[i+1]; y2 = cycle_data_hh[i+1];
-        _,_,TT = LineData(T,x1,y1,x2,y2,fluid)
+        _,_,TT = LineData(T_line,x1,y1,x2,y2,fluid)
         T_data = append!(T_data,TT)
-        _,_,ss = LineData(S,x1,y1,x2,y2,fluid)
+        _,_,ss = LineData(S_line,x1,y1,x2,y2,fluid)
         s_data = append!(s_data,ss)
     end
     fig1 = plot(s_data,T_data,label = "Cycle")
