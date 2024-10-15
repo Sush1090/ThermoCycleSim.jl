@@ -374,7 +374,7 @@ end
     5. `SuperHeat`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
 function SimpleEvaporator(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sh)
-    @assert size(Δp,1) ==1 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
+    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
     @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
     @named preheater = Preheater(fluid = fluid,Δp= Δp[1]) 
@@ -676,7 +676,7 @@ end
     5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
 function SimpleCondensor(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sc)
-    @assert size(Δp,1) ==1 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
+    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
     @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
     @named precooler = Precooler(fluid = fluid,Δp= Δp[1]) 
