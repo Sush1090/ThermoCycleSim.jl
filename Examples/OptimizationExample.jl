@@ -4,7 +4,7 @@ using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 function ORC(x,p)
 
     @independent_variables t
-    local fluid = "Toluene"
+    local fluid = "R134A"
     _system = Isentropic_η(η = 1,πc = x[2]) 
     start_T = x[1]; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 
@@ -37,11 +37,24 @@ function ORC(x,p)
     prob = ODEProblem(sys,u0,tspan,guesses = [])
     sol = solve(prob)
 
-    @show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1]
+    exp_phase = PhaseSI("H",sol[exp.h_out][1],"P",sol[exp.p_out][1],fluid)
+
+    @show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
+    penalty1 = 0     # for outlet to be ga phase
+    if exp_phase != "gas"
+        penalty1 = abs(η)
+    end
+
+    penalty2 = 0 # evaporator outlte temperature is desired to be less than 380
+    if (sol[evap.T_out][1] > 380)
+        penalty2 = abs(η)
+    end
+    cost = η + penalty1 + penalty2
+
 
     Compute_cycle_error(sol,systems)
 
-    return η
+    return cost
 end
 
 
@@ -63,5 +76,8 @@ x0 = [300,5,100]
 p = []
 
 f = OptimizationFunction(ORC)
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
+# prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
+# sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
+
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 5,100])
 sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
