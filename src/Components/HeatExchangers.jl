@@ -5,8 +5,31 @@ function HEX_type(;T_in = nothing,T_out = nothing,Qdot = nothing, mdot = nothing
 
 end
 
+"""
+`IsobaricHeatSource(;name,Q_dot,fluid)`
+   A heat source independent of temperature and no pressure drop
+*    Arguments: 
+    1. `Q_dot`     : Total heat supplied
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function IsobaricHeatSource(;name,Q_dot,fluid)
+    @assert Q_dot >= 0
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -46,8 +69,31 @@ end
 
 export IsobaricHeatSource
 
+"""
+`IsobaricHeatSink(;name,Q_dot,fluid)`
+   A heat sink independent of temperature and no pressure drop
+*    Arguments: 
+    1. `Q_dot`     : Total heat supplied
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function IsobaricHeatSink(;name,Q_dot,fluid)
+    @assert Q_dot <= 0 
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -88,7 +134,30 @@ end
 export IsobaricHeatSink
 
 
+"""
+`Preheater(;name,fluid,Δp)`
+    Preheater for the Evaporator.     
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function Preheater(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -134,7 +203,30 @@ function Preheater(;name,fluid,Δp)
     ]
     compose(ODESystem(eqs, t, vars, para;name), inport, outport)
 end
+"""
+`TwoPhaseEvap(;name,fluid,Δp)`
+    Twophase part for the Evaporator.     
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function TwoPhaseEvap(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -181,6 +273,31 @@ function TwoPhaseEvap(;name,fluid,Δp)
     compose(ODESystem(eqs, t, vars, para;name), inport, outport)
 end
 
+"""
+`SuperHeat(;name,fluid,ΔT_sh,Δp)`
+    Superheated part of the evaporator.
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    2. `ΔT_sh`  : Super heated Temperature
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
+
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function SuperHeat(;name,fluid,ΔT_sh,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -252,14 +369,15 @@ end
 *    Port Variables:
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
-    3. `preheater`      : Component with internal `CoolantPort` --> `inport` and `outport`
+    3. `Preheater`      : Component with internal `CoolantPort` --> `inport` and `outport`
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
-    5. `superheater`   : Component with internal `CoolantPort` --> `inport` and `outport`
+    5. `SuperHeat`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
 function SimpleEvaporator(;name,fluid,Δp,ΔT_sh)
+    @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
     @named preheater = Preheater(fluid = fluid,Δp= Δp/3) 
-    @named TwoPhaseEvap = TwoPhaseEvap(fluid = fluid,Δp= Δp/3)
+    @named twophase = TwoPhaseEvap(fluid = fluid,Δp= Δp/3)
     @named superheater = SuperHeat(fluid = fluid,Δp= Δp/3,ΔT_sh = ΔT_sh)
     @named outport = CoolantPort()
 
@@ -284,26 +402,26 @@ function SimpleEvaporator(;name,fluid,Δp,ΔT_sh)
     end
     eqs = [
     connect(inport,preheater.inport)
-    connect(preheater.outport,TwoPhaseEvap.inport)
-    connect(TwoPhaseEvap.outport,superheater.inport)
+    connect(preheater.outport,twophase.inport)
+    connect(twophase.outport,superheater.inport)
     connect(superheater.outport,outport)
-    T_sat ~ TwoPhaseEvap.T_sat
+    T_sat ~ twophase.T_sat
     T_in ~ preheater.T_in
     T_out ~ superheater.T_out
-    P ~ preheater.P + TwoPhaseEvap.P + superheater.P
+    P ~ preheater.P + twophase.P + superheater.P
 
-    s_in ~ preheater.inport.s
-    p_in ~ preheater.inport.p
-    h_in ~ preheater.inport.h
-    ρ_in ~ preheater.inport.ρ
+    s_in ~ preheater.s_in
+    p_in ~ preheater.p_in
+    h_in ~ preheater.h_in
+    ρ_in ~ preheater.ρ_in
 
-    s_out ~ superheater.outport.s
-    p_out ~ superheater.outport.p
-    h_out ~ superheater.outport.h
-    ρ_out ~ superheater.outport.ρ
+    s_out ~ superheater.s_out
+    p_out ~ superheater.p_out
+    h_out ~ superheater.h_out
+    ρ_out ~ superheater.ρ_out
 ]
 
-compose(ODESystem(eqs, t, vars, para;name), inport,preheater,TwoPhaseEvap,superheater, outport)
+compose(ODESystem(eqs, t, vars, para;name), inport,preheater,twophase,superheater, outport)
 
 end
 
@@ -311,7 +429,30 @@ end
 export SimpleEvaporator, SuperHeat,Preheater,TwoPhaseEvap
 
 
+"""
+`Precooler(;name,fluid,Δp)`
+    Precooler for the Condensor.     
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function Precooler(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -353,12 +494,36 @@ function Precooler(;name,fluid,Δp)
         
         P ~ outport.mdot*(outport.h - inport.h)
         
-        T_sat ~ PropsSI("T","Q",1,"P",outport.p,fluid)
+        T_sat ~ PropsSI("T","Q",1,"P",outport.p,fluid) 
     ]
     compose(ODESystem(eqs, t, vars, para;name), inport, outport)
 end
 
 
+"""
+`TwoPhaseCond(;name,fluid,Δp)`
+    Twophase part for the Condensor.     
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
+
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`  
+"""
 function TwoPhaseCond(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -377,7 +542,7 @@ function TwoPhaseCond(;name,fluid,Δp)
         p_out(t)
         T_out(t)
         h_out(t)
-        ρ_out(t)
+        ρ_out(t) 
 
         T_sat(t)
     end
@@ -407,7 +572,33 @@ end
 
 
 
+"""
+`SuperCooler(;name,fluid,ΔT_sh,Δp)`
+    SuperCooler part of the Condensor.
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    2. `ΔT_sh`  : Super heated Temperature
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
+
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+"""
 function SuperCooler(;name,fluid,ΔT_sc,Δp)
+    
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -455,8 +646,36 @@ end
 
 
 
+"""
+`SimpleCondensor(;name,fluid,Δp,ΔT_sh)`
+    Composed of multiple `ODESystem` - `Precooler`, `TwoPhaseCond`, and `SuperCooler`
+*    Arguments: 
+    1. `Δp`     : Pressure Drop across Evaporator
+    2. `ΔT_sh`  : Super heated Temperature
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
+    12. `T_sat` : Saturation Temperature
 
+*    Port Variables:
+    1. `inport`         : `p` and `h`
+    2. `outport`        : `p` and `h`
+    3. `Precooler`      : Component with internal `CoolantPort` --> `inport` and `outport`
+    4. `TwoPhaseCond`   : Component with internal `CoolantPort` --> `inport` and `outport`
+    5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
+"""
 function SimpleCondensor(;name,fluid,Δp,ΔT_sc)
+    @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
     @named precooler = Precooler(fluid = fluid,Δp= Δp/3) 
     @named twophasecond = TwoPhaseCond(fluid = fluid,Δp= Δp/3)
@@ -492,15 +711,15 @@ function SimpleCondensor(;name,fluid,Δp,ΔT_sc)
     T_out ~ supercooler.T_out
     P ~ precooler.P + twophasecond.P + supercooler.P
 
-    s_in ~ precooler.inport.s
-    p_in ~ precooler.inport.p
-    h_in ~ precooler.inport.h
-    ρ_in ~ precooler.inport.ρ
+    s_in ~ precooler.s_in
+    p_in ~ precooler.p_in
+    h_in ~ precooler.h_in
+    ρ_in ~ precooler.ρ_in
 
-    s_out ~ supercooler.outport.s
-    p_out ~ supercooler.outport.p
-    h_out ~ supercooler.outport.h
-    ρ_out ~ supercooler.outport.ρ
+    s_out ~ supercooler.s_out
+    p_out ~ supercooler.p_out
+    h_out ~ supercooler.h_out
+    ρ_out ~ supercooler.ρ_out
 ]
 
 compose(ODESystem(eqs, t, vars, para;name), inport,precooler,twophasecond,supercooler, outport)
