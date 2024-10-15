@@ -5,7 +5,7 @@ using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 fluid = "R134A"
 _system = Isentropic_η(η = 1,πc = 5) # fix the isentropic Efficiency of compressor and pressre ratio
 
-start_T =  292.89105203453886; # Temperature at source 
+start_T =  293.8683097503452; # Temperature at source 
 start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
 # As it is ORC the inlet state is liquid and bit away from saturation curv. Hence 1e3Pa of pressure is added
 ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T; # ensure the subcoolin temperature to reach bck to starting state.
@@ -15,7 +15,7 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
 @named comp = Compressor(_system, fluid =fluid)
-@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 23.054838257544585,fluid = fluid)
+@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 15.617218565290397,fluid = fluid)
 @named exp = Expander(_system,fluid= fluid)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
