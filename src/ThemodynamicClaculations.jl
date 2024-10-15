@@ -1,7 +1,11 @@
 
 """
 `Compute_cycle_error(p_source,h_source,p_sink,h_sink;reltol = 1e-8)`
-    * Computes cycle end point mismatch in states - between sink and source
+    * Computes cycle end point mismatch in states - between sink and source.
+
+    returns `nothing`
+
+    Shows error incase of mismatch
 """
 function Compute_cycle_error(p_source,h_source,p_sink,h_sink;reltol = 1e-8)
     err_p = abs(p_source - p_sink)/p_source
