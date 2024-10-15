@@ -9,7 +9,7 @@ This package combines ModelingToolkit.jl with CoolProp.jl to make basic thermody
     2. Vapour Compression Cycle
     3. Brayton Cycle
 
-It is for steady state calculations, hence the evaporators and compressors are  not only modeled using energy conservation. The principle is state-point manipulations.  
+It is for steady state calculations, hence the evaporators and compressors are  not only modeled using energy conservation. The principle is state-point manipulations.  The system works better for subcritical cycle parameters
 
 It is extendible as users can add their own component in the following manner 
 
