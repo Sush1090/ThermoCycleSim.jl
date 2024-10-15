@@ -373,12 +373,13 @@ end
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperHeat`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleEvaporator(;name,fluid,Δp,ΔT_sh)
+function SimpleEvaporator(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sh)
+    @assert size(Δp,1) ==1 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
     @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
-    @named preheater = Preheater(fluid = fluid,Δp= Δp/3) 
-    @named twophase = TwoPhaseEvap(fluid = fluid,Δp= Δp/3)
-    @named superheater = SuperHeat(fluid = fluid,Δp= Δp/3,ΔT_sh = ΔT_sh)
+    @named preheater = Preheater(fluid = fluid,Δp= Δp[1]) 
+    @named twophase = TwoPhaseEvap(fluid = fluid,Δp= Δp[2])
+    @named superheater = SuperHeat(fluid = fluid,Δp= Δp[3],ΔT_sh = ΔT_sh)
     @named outport = CoolantPort()
 
     para = @parameters begin
@@ -674,12 +675,13 @@ end
     4. `TwoPhaseCond`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleCondensor(;name,fluid,Δp,ΔT_sc)
+function SimpleCondensor(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sc)
+    @assert size(Δp,1) ==1 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
     @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
-    @named precooler = Precooler(fluid = fluid,Δp= Δp/3) 
-    @named twophasecond = TwoPhaseCond(fluid = fluid,Δp= Δp/3)
-    @named supercooler = SuperCooler(fluid = fluid,Δp= Δp/3,ΔT_sc = ΔT_sc)
+    @named precooler = Precooler(fluid = fluid,Δp= Δp[1]) 
+    @named twophasecond = TwoPhaseCond(fluid = fluid,Δp= Δp[2])
+    @named supercooler = SuperCooler(fluid = fluid,Δp= Δp[3],ΔT_sc = ΔT_sc)
     @named outport = CoolantPort()
 
     para = @parameters begin

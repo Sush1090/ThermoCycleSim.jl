@@ -18,9 +18,9 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
 @named comp = Compressor(_system, fluid =fluid)
-@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = 0,fluid = fluid)
+@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0],fluid = fluid)
 @named exp = Valve(valve_system,fluid= fluid)
-@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = 0,fluid = fluid)
+@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
 
 # Define equations

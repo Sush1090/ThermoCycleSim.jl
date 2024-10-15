@@ -14,9 +14,9 @@ function ORC(x,p)
 
     @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
     @named comp = Compressor(_system, fluid =fluid)
-    @named evap = SimpleEvaporator(Δp = 0,ΔT_sh = x[3],fluid = fluid)
+    @named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = x[3],fluid = fluid)
     @named exp = Expander(_system,fluid= fluid)
-    @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = 0,fluid = fluid)
+    @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
     @named sink = MassSink(fluid = fluid)
 
 # Define equations
