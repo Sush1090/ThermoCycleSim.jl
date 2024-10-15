@@ -3,7 +3,9 @@ struct IsenthalpicExpansionValve
     πc
 end
 
-
+"""
+`Valve(;name,πc,fluid): Isenthalpic valve`
+"""
 function Valve(;name,πc,fluid)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -42,8 +44,29 @@ function Valve(;name,πc,fluid)
     ]
     compose(ODESystem(eqs, t, vars, para;name), inport, outport)
 end
+"""
+`Valve(type::IsenthalpicExpansionValve;name,fluid): Isenthalpic valve`
 
+*    Arguments: 
+    1. `type` : `IsenthalpicExpansionValve` contains --> pressure ratio 
+    
+*    Local Variables:
+    1. `P`      : Power  
+    2. `s_in`   : Inlet Entropy
+    3. `p_in`   : Inlet Pressure
+    4. `T_in`   : Inlet Temperature
+    5. `h_in`   : Inlet Enthalpy
+    6. `ρ_in`   : Inlet Density
+    7. `s_out`  : Outlet Entropy
+    8. `p_out`  : Outlet Pressure
+    9. `T_out`  : Outlet Temperature
+    10. `h_out` : Outlet Enthalpy
+    11. `ρ_out` : Outlet Density
 
+*    Port Variables:
+    1. `inport`  : `p` and `h`
+    2. `outport` : `p` and `h`
+"""
 function Valve(type::IsenthalpicExpansionValve;name,fluid)
     @unpack πc = type
     @named inport = CoolantPort()
