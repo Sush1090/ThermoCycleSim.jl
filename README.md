@@ -52,13 +52,14 @@ It also provides basic functions that find the pressure to match the pitch point
 Every default component has the following variables : `P(t)`,`s_in(t)`,`p_in(t)`,`T_in(t)`,`h_in(t)`,`ρ_in(t)`,`s_out(t)`,`p_out(t)`,`T_out(t)`,`h_out(t)`,`ρ_out(t)` and two ports `inport` and `outport`. 
 Follow the [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) documentation for further understanding futher variable handeling. 
 
+Note: sign convetion: Power supplied to the system is +ve while from thee system is -ve
 
 ## Examples 
 ### Organic Rankine Cycle
 Example of Organic Rankine Cycle using R134A
 
 ```
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp, Plots
 
 
 @independent_variables t
@@ -168,7 +169,7 @@ Compute_cycle_error(sol,systems)
 As of now the direct plotting of T-S phase digram of the cycle is provided. It requires the `system` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
 
 ## Basic Thermodynamic Cycle Optimization
-The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purel theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
+The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purely theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
 
 The most trusted algorithms for thermodynamic optimizations are Genetic Algorithms. It is well integrated with
 [Optimization.jl](https://docs.sciml.ai/Optimization/stable/) and [Metaheuristics.jl](https://github.com/jmejia8/Metaheuristics.jl)
@@ -185,6 +186,6 @@ f = OptimizationFunction(ORC)
 prob = Optimization.OptimizationProblem(f, x0, p, lb = [...], ub = [...])
 sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 ```
-The thing to note here is that the `lb` and `ub` give to the optimizer has to be in limits such that the interanal functions of CoolProp are computable. 
+The thing to note here is that the `lb` and `ub` given to the optimizer has to be in limits such that the internal functions of CoolProp are computable. 
 
 A working example is in [Examples\OptimizationExample.jl](https://github.com/Sush1090/CoolPropCycles.jl/blob/main/Examples/OptimizationExample.jl)
