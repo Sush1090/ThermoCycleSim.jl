@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-This package combines ModelingToolkit.jl with CoolProp.jl to make basic thermodynamic cycles:
+This package combines [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) with [CoolProp.jl](https://github.com/CoolProp/CoolProp.jl) to make basic thermodynamic cycles:
 
     1. Organic Rakine Cycle
     2. Vapour Compression Cycle
@@ -49,6 +49,9 @@ It also provides basic functions that find the pressure to match the pitch point
 
 
 ## Basic Usage
+Every default component has the following variables : `P(t)`,`s_in(t)`,`p_in(t)`,`T_in(t)`,`h_in(t)`,`ρ_in(t)`,`s_out(t)`,`p_out(t)`,`T_out(t)`,`h_out(t)`,`ρ_out(t)` and two ports `inport` and `outport`. 
+Follow the [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) documentation for further understanding futher variable handeling. 
+
 
 ## Examples 
 ### Organic Rankine Cycle
