@@ -72,7 +72,7 @@ function IsentropicExpansion(πc, h_in, p_in,fluid,η)
     @assert η <= 1 "Efficiency more than 1"
     s_in = PropsSI("S", "H", h_in, "P", p_in, fluid)
     h_is = PropsSI("H", "S", s_in, "P",p_in/πc, fluid)
-    h_out = h_in  - (h_in - h_is)/η
+    h_out = h_in  - η*(h_in - h_is)
     return h_out
 end
 @register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid,η)
