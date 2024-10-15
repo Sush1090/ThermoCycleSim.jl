@@ -65,7 +65,7 @@ A phase ploting routine is provided for the given cycle.
 The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purel theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
 
 The most trusted algorithms for thermodynamic optimizations are Genetic Algorithms. It is well integrated with
-[Optimization.jl]{https://docs.sciml.ai/Optimization/stable/} and [Metaheuristics.jl]{https://github.com/jmejia8/Metaheuristics.jl}
+[Optimization.jl](https://docs.sciml.ai/Optimization/stable/) and [Metaheuristics.jl](https://github.com/jmejia8/Metaheuristics.jl)
 
 Usage Framework 
 
@@ -81,4 +81,4 @@ sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 ```
 The thing to note here is that the `lb` and `ub` give to the optimizer has to be in limits such that the interanal functions of CoolProp are computable. 
 
-A working example is in [Examples\OptimizationExample.jl]{https://github.com/Sush1090/CoolPropCycles.jl/blob/main/Examples/OptimizationExample.jl}
+A working example is in [Examples\OptimizationExample.jl](https://github.com/Sush1090/CoolPropCycles.jl/blob/main/Examples/OptimizationExample.jl)
