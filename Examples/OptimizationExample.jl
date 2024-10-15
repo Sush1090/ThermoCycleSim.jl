@@ -49,9 +49,14 @@ function ORC(x,p)
     if (sol[evap.T_out][1] > 380)
         penalty2 = abs(η)
     end
-    cost = η + penalty1 + penalty2
 
+    penalty3 = 0
+    if (sol[evap.T_sat][1] > 375)
+        penalty3 = abs(η)
+    end
+    cost = η + penalty1 + penalty2 + penalty3
 
+    @show cost
     Compute_cycle_error(sol,systems)
 
     return cost
