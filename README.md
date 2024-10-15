@@ -109,7 +109,7 @@ CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```
 
 
-### Vapour Compression cycle
+<!-- ### Vapour Compression cycle
 Example of Vapour Compression
 
 ```
@@ -161,7 +161,7 @@ sol = solve(prob)
 @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
-```
+``` -->
 
 ## Phase Diagram Plotting
 
