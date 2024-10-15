@@ -371,7 +371,7 @@ end
     2. `outport`        : `p` and `h`
     3. `Preheater`      : Component with internal `CoolantPort` --> `inport` and `outport`
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
-    5. `SuperHeat`   : Component with internal `CoolantPort` --> `inport` and `outport`
+    5. `SuperHeat`      : Component with internal `CoolantPort` --> `inport` and `outport`
 """
 function SimpleEvaporator(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sh)
     @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
