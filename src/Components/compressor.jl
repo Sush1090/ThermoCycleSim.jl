@@ -1,5 +1,8 @@
 
-
+"""
+`Isentropic_η(;η = 0.9,πc = 5)`
+A struct that passes to `Compressor` and `Expander`
+"""
 struct Isentropic_η
     η
     πc
