@@ -4,7 +4,7 @@ struct IsenthalpicExpansionValve
 end
 
 
-function Valve(;name,πc)
+function Valve(;name,πc,fluid)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     vars = @variables begin
@@ -44,7 +44,7 @@ function Valve(;name,πc)
 end
 
 
-function Valve(type::IsenthalpicExpansionValve;name)
+function Valve(type::IsenthalpicExpansionValve;name,fluid)
     @unpack πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
