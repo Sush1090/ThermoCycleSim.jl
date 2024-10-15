@@ -162,7 +162,7 @@ Compute_cycle_error(sol,systems)
 
 ## Phase Diagram Plotting
 
-A phase ploting routine is provided for the given cycle. 
+As of now the direct plotting of T-S phase digram of the cycle is provided. It requires the `system` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
 
 ## Basic Thermodynamic Cycle Optimization
 The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purel theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
