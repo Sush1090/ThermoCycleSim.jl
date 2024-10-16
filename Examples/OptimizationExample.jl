@@ -1,11 +1,11 @@
 using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
-
+global fluid = "R134A"
 function ORC(x,p)
 
     @independent_variables t
-    local fluid = "R134A"
-    _system = Isentropic_η(η = 1,πc = x[2]) 
+  
+    _system = Isentropic_η(η = 0.75,πc = x[2]) 
     start_T = x[1]; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 
     ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T;
@@ -37,24 +37,30 @@ function ORC(x,p)
     prob = ODEProblem(sys,u0,tspan,guesses = [])
     sol = solve(prob)
 
-    exp_phase = PhaseSI("H",sol[exp.h_out][1],"P",sol[exp.p_out][1],fluid)
+    #exp_phase = PhaseSI("H",sol[exp.h_out][1],"P",sol[exp.p_out][1],fluid)
+    
 
     @show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
-    penalty1 = 0     # for outlet to be ga phase
-    if exp_phase != "gas"
+
+    penalty1 = 0     # for outlet to be gas phase
+    # if exp_phase != "gas"
+    #     penalty1 = abs(η)
+    # end
+
+    if sol[exp.T_out][1] <= sol[cond.T_sat][1] + 3
         penalty1 = abs(η)
     end
-
+    @assert p[1]>p[2]
     penalty2 = 0 # evaporator outlte temperature is desired to be less than 380
-    if (sol[evap.T_out][1] > 380)
+    if (sol[evap.T_out][1] > p[1])
         penalty2 = abs(η)
     end
 
-    penalty3 = 0
-    if (sol[evap.T_sat][1] > 375)
-        penalty3 = abs(η)
-    end
-    cost = η + penalty1 + penalty2 + penalty3
+     penalty3 = 0
+    # if (sol[evap.T_sat][1] > p[2])
+    #     penalty3 = abs(η)
+    # end
+    cost = η + penalty1 + penalty2  +penalty3
 
     @show cost
     Compute_cycle_error(sol,systems)
@@ -78,11 +84,15 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 using Optimization, OptimizationMetaheuristics
 
 x0 = [300,5,100]
-p = []
+p = [365,360]
+
+p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
+p_crit = PropsSI("PCRIT",fluid)
+πc_max = p_crit/p_max_start
 
 f = OptimizationFunction(ORC)
 # prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
 # sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 5,100])
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, πc_max,100])
 sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
