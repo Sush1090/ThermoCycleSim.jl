@@ -106,41 +106,6 @@ function MassSink(;name,fluid)
    compose(ODESystem(eqs, t, vars, para;name),port)
 end
 
-# """
-# CycleSource: An attempt to close the cycle
-# """
-# function CycleSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5)
-#     @named inport = CoolantPort()
-#     @named outport = CoolantPort()
-#     para = @parameters begin
-        
-#     end
-#     vars = @variables begin
-#         mdot(t)
-#         s(t)
-#         p(t)
-#         T(t)
-#         h(t)
-#         ρ(t)
-#      end
-#      eqs = [
-#         inport.mdot ~ abs(source_mdot) # Outflow is negative
-#         inport.p ~ source_pressure
-#         inport.h ~ source_enthalpy
-#     s ~ PropsSI("S","H",port.h,"P",port.p,fluid)
-#     p ~ port.p
-#     T ~ PropsSI("T","H",port.h,"P",port.p,fluid)
-#     h ~ port.h
-#     ρ ~ PropsSI("D","H",port.h,"P",port.p,fluid)
-#             outport.h ~ source_enthalpy
-#             outport.p ~ source_pressure
-#             outport.mdot ~ source_mdot 
-#    ]
-#    compose(ODESystem(eqs, t, vars, para;name),inport,outport)
-
-# end
-
-
 
 """
 ComputeSpecificLatentHeat: Computes the specific latent heat of the give fluid at a particular varliable value. var1 should not be enthalpy or vapour quality
@@ -157,4 +122,4 @@ function ComputeSpecificLatentHeat(var1::AbstractString,value1,fluid::AbstractSt
 end
 @register_symbolic ComputeSpecificLatentHeat(var1::AbstractString,value1,fluid::AbstractString)
 
-export CoolantPort,CoolComponent,MassSource,MassSink,AmbientTemperature,AtmosphericPressure,ComputeSpecificLatentHeat, CycleSource
+export CoolantPort,CoolComponent,MassSource,MassSink,AmbientTemperature,AtmosphericPressure,ComputeSpecificLatentHeat
