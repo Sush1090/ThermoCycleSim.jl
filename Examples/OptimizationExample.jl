@@ -1,11 +1,11 @@
 using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
-global fluid = "R134A"
+global fluid = "R245fa"
 function ORC(x,p)
 
     @independent_variables t
   
-    _system = Isentropic_η(η = 0.75,πc = x[2]) 
+    _system = Isentropic_η(η = 0.9,πc = x[2]) 
     start_T = x[1]; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 
     ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T;
@@ -83,16 +83,21 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 
 using Optimization, OptimizationMetaheuristics
 
+#[start_T,πc,T_sh,η_isen]
 x0 = [300,5,100]
 p = [365,360]
 
 p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
 p_crit = PropsSI("PCRIT",fluid)
-πc_max = p_crit/p_max_start
+πc_min = p_crit/p_max_start
 
 f = OptimizationFunction(ORC)
 # prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
 # sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, πc_max,100])
-sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [280, 1.1,2], ub = [300, πc_min,100])
+sol = solve(prob, PSO(), maxiters = 100000, maxtime = 500.0)
+
+if (f(sol.u,p) >=0)
+    @warn "No Feasible point found"
+end

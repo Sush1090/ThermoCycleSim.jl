@@ -5,9 +5,9 @@ using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 @independent_variables t
 fluid = "R134A"
-_system = Isentropic_η(η = 1,πc = 4) # fix the isentropic Efficiency of compressor and pressre ratio
+_system = Isentropic_η(η = 0.8,πc = 4) # fix the isentropic Efficiency of compressor and pressre ratio
 valve_system  = IsenthalpicExpansionValve(4)
-start_T = 300; # Temperature at source 
+start_T = 290; # Temperature at source 
 start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e3 # pressure at source. For HP we need gas at source
 @assert PhaseSI("T",start_T,"P",start_p,fluid) == "gas"
 
@@ -46,3 +46,4 @@ sol = solve(prob)
 @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
+CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
