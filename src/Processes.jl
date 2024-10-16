@@ -25,7 +25,7 @@ export IsentropicCompression
 
 
 """
-IsentropicExpansion(πc, h_in, p_in,fluid,η)
+`IsentropicExpansion(πc, h_in, p_in,fluid,η)`
 
 * Arguments:
     1. `πc`   : Pressure Ratio
@@ -45,4 +45,6 @@ function IsentropicExpansion(πc, h_in, p_in,fluid,η)
 end
 @register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid,η)
 export IsentropicExpansion
+
+
 

@@ -42,8 +42,7 @@ It provides the following components:
     3. Isenthalpic Expander 
     4. Evaporator
     5. Condensor
-    6. Heat Exchanger -  No phase change - Recuperator
-    7. Electric Heating
+    6. Heat Source - Temperature independent
 
  <!-- It also provides basic functions that find the pressure to match the pitch points.  -->
 ## Installation
@@ -52,7 +51,7 @@ It provides the following components:
 Every default component has the following variables : `P(t)`,`s_in(t)`,`p_in(t)`,`T_in(t)`,`h_in(t)`,`ρ_in(t)`,`s_out(t)`,`p_out(t)`,`T_out(t)`,`h_out(t)`,`ρ_out(t)` and two ports `inport` and `outport`. 
 Follow the [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) documentation for further understanding variable handling. 
 
-Note: sign convetion: Power supplied to the system is +ve while from thee system is -ve
+Note: sign convetion - Power supplied to the system is +ve while from thee system is -ve
 
 ## Examples 
 ### Organic Rankine Cycle
