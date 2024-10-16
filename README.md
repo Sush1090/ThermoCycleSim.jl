@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-This package combines [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) with [CoolProp.jl](https://github.com/CoolProp/CoolProp.jl) to make basic thermodynamic cycles:
+This package combines [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl) "Acausal Modeling" with [CoolProp.jl](https://github.com/CoolProp/CoolProp.jl) to make thermodynamic cycles:
 
     1. Organic Rakine Cycle
     2. Vapour Compression Cycle
@@ -46,7 +46,7 @@ It provides the following components:
     7. Electric Heating
 
  <!-- It also provides basic functions that find the pressure to match the pitch points.  -->
-
+## Installation
 
 ## Basic Usage
 Every default component has the following variables : `P(t)`,`s_in(t)`,`p_in(t)`,`T_in(t)`,`h_in(t)`,`ρ_in(t)`,`s_out(t)`,`p_out(t)`,`T_out(t)`,`h_out(t)`,`ρ_out(t)` and two ports `inport` and `outport`. 
@@ -168,7 +168,7 @@ Compute_cycle_error(sol,systems)
 
 As of now the direct plotting of T-S phase digram of the cycle is provided. It requires the `system` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
 
-## Basic Thermodynamic Cycle Optimization
+## Thermodynamic Cycle Optimization
 The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purely theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
 
 The most trusted algorithms for thermodynamic optimizations are Genetic Algorithms. It is well integrated with
