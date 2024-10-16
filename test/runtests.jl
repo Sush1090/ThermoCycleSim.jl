@@ -75,3 +75,43 @@ in_phase_test = PhaseSI("T",sol[evporator.T_in][1],"P",sol[evporator.p_in][1],fl
 @test in_phase_test == in_phase_liquid
 end
 #@testset 
+
+@testset "Condensor" begin
+    out_phase = "liquid"
+    in_phase = "gas"
+    #in_phase_supercrit
+    ΔT_sc = 3
+fluid = "R134A"
+@independent_variables t
+start_T = 300;
+start_p = PropsSI("P","Q",0,"T",start_T,fluid) - 101325
+start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
+
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
+@named condensor = SimpleCondensor(ΔT_sc = ΔT_sc,fluid = fluid)
+@named sink = MassSink(fluid = fluid)
+
+eqs = [
+    connect(source.port,condensor.inport)
+    connect(condensor.outport,sink.port)
+]
+systems = [source,condensor,sink]
+@named test_condensor = ODESystem(eqs, t, systems=systems)
+u0 = []
+tspan = (0.0, 1.0)
+sys = structural_simplify(test_condensor)
+prob = ODEProblem(sys,u0,tspan,guesses = [])
+sol = solve(prob)
+
+out_phase_test = PhaseSI("T",sol[condensor.T_out][1],"P",sol[condensor.p_out][1],fluid)
+in_phase_test = PhaseSI("T",sol[condensor.T_in][1],"P",sol[condensor.p_in][1],fluid)
+
+@test out_phase_test == out_phase
+@test isapprox(sol[condensor.T_out][1]+ΔT_sc,sol[condensor.T_sat][1])
+@test in_phase_test == in_phase
+end
+
+
+@testset "Valve" begin
+    
+end
