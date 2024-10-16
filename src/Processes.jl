@@ -17,7 +17,7 @@ function IsentropicCompression(πc, h_in, p_in,fluid,η)
     @assert η <= 1 "Efficiency more than 1"
     s_in = PropsSI("S", "H", h_in, "P", p_in, fluid)
     h_is = PropsSI("H", "S", s_in, "P",πc*p_in, fluid)
-    h_out = h_in  - η*(h_in - h_is)
+    h_out = h_in  + (h_is -h_in)/η
     return h_out
 end
 @register_symbolic IsentropicCompression(πc, h_in, p_in,fluid,η)
