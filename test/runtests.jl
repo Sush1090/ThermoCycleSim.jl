@@ -37,6 +37,12 @@ bool2 = isapprox(sol[exp.s_in][1],sol[exp.s_out][1])
 @test bool2 == true
 @test isapprox(sol[source.p][1],sol[sink.p][1])
 @test isapprox(sol[source.h][1],sol[sink.h][1])
+if _system.η == 1
+    @test isapprox(sol[comp.s_in][1],sol[comp.s_out][1])
+    @test isapprox(sol[exp.s_in][1],sol[exp.s_out][1])
+end
+@test isapprox(sol[comp.p_out][1]/sol[comp.p_in][1],_system.πc)
+@test isapprox(sol[exp.p_in][1]/sol[exp.p_out][1],_system.πc)
 end
 
 
@@ -109,6 +115,7 @@ in_phase_test = PhaseSI("T",sol[condensor.T_in][1],"P",sol[condensor.p_in][1],fl
 @test out_phase_test == out_phase
 @test isapprox(sol[condensor.T_out][1]+ΔT_sc,sol[condensor.T_sat][1])
 @test in_phase_test == in_phase
+
 end
 
 
