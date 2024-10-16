@@ -22,7 +22,7 @@
     1. `inport`  : `p` and `h`
     2. `outport` : `p` and `h`
 """
-function Expander(type::Isentropic_η;name,fluid)
+function Expander(type::Isentropic_η=Isentropic_η();name,fluid)
     @unpack η,πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()

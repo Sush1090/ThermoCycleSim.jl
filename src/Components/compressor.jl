@@ -35,7 +35,7 @@ export Isentropic_η
     1. `inport`  : `p` and `h`
     2. `outport` : `p` and `h`
 """
-function Compressor(type::Isentropic_η;name,fluid)
+function Compressor(type::Isentropic_η=Isentropic_η();name,fluid)
     @unpack η,πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
