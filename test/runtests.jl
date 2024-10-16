@@ -40,9 +40,11 @@ bool2 = isapprox(sol[exp.s_in][1],sol[exp.s_out][1])
 end
 
 
-@testset "Evaporator phase" begin
+@testset "Evaporator" begin
     out_phase = "gas"
-
+    in_phase_liquid = "liquid"
+    #in_phase_supercrit
+    ΔT_sh = 5
 fluid = "R134A"
 @independent_variables t
 start_T = 300;
@@ -50,7 +52,7 @@ start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3
 start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-@named evporator = SimpleEvaporator(ΔT_sh = 5,fluid = fluid)
+@named evporator = SimpleEvaporator(ΔT_sh = ΔT_sh,fluid = fluid)
 @named sink = MassSink(fluid = fluid)
 
 eqs = [
@@ -65,8 +67,11 @@ sys = structural_simplify(test_evap)
 prob = ODEProblem(sys,u0,tspan,guesses = [])
 sol = solve(prob)
 
-phase_test = PhaseSI("T",sol[evporator.T_out][1],"P",sol[evporator.p_out][1],fluid)
+out_phase_test = PhaseSI("T",sol[evporator.T_out][1],"P",sol[evporator.p_out][1],fluid)
+in_phase_test = PhaseSI("T",sol[evporator.T_in][1],"P",sol[evporator.p_in][1],fluid)
 
-@test phase_test == out_phase
+@test out_phase_test == out_phase
+@test isapprox(sol[evporator.T_out][1]-ΔT_sh,sol[evporator.T_sat][1])
+@test in_phase_test == in_phase_liquid
 end
 #@testset 
