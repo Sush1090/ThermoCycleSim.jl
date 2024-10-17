@@ -40,7 +40,8 @@ function ORC(x,p)
     #exp_phase = PhaseSI("H",sol[exp.h_out][1],"P",sol[exp.p_out][1],fluid)
     
 
-    @show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
+    #@show
+     η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
 
     penalty1 = 0     # for outlet to be gas phase
     # if exp_phase != "gas"
@@ -57,12 +58,12 @@ function ORC(x,p)
     end
 
      penalty3 = 0
-    # if (sol[evap.T_sat][1] > p[2])
-    #     penalty3 = abs(η)
-    # end
+    if (sol[evap.T_sat][1] > p[2])
+        penalty3 = abs(η)
+    end
     cost = η + penalty1 + penalty2  +penalty3
 
-    @show cost
+    #@show cost
     Compute_cycle_error(sol,systems)
 
     return cost
@@ -83,9 +84,9 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 
 using Optimization, OptimizationMetaheuristics
 
-#[start_T,πc,T_sh,η_isen]
+#[start_T,πc,T_sh]
 x0 = [300,5,100]
-p = [365,360]
+p = [365,355]
 
 p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
 p_crit = PropsSI("PCRIT",fluid)
@@ -96,7 +97,7 @@ f = OptimizationFunction(ORC)
 # sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 
 prob = Optimization.OptimizationProblem(f, x0, p, lb = [280, 1.1,2], ub = [300, πc_min,100])
-sol = solve(prob, PSO(), maxiters = 100000, maxtime = 500.0)
+sol = solve(prob, DE(), maxiters = 50, maxtime = 1000.0)
 
 if (f(sol.u,p) >=0)
     @warn "No Feasible point found"

@@ -19,16 +19,19 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 @named exp = Expander(_system,fluid= fluid)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
+@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=3)
 
 # Define equations
 eqs = [
     connect(source.port,comp.inport)
-    connect(comp.outport,evap.inport)
+    connect(comp.outport,recp.inport_liquid)
+    connect(recp.outport_liquid,evap.inport)
     connect(evap.outport,exp.inport)
-    connect(exp.outport,cond.inport)
+    connect(exp.outport,recp.inport_gas)
+    connect(recp.outport_gas,cond.inport)
     connect(cond.outport,sink.port)
 ]
-systems=[source,comp,evap,exp,cond,sink] # Define system
+systems=[source,comp,evap,exp,cond,recp,sink] # Define system
 
 @named dis_test = ODESystem(eqs, t, systems=systems)
 

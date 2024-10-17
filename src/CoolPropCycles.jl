@@ -12,6 +12,7 @@ include("Components/compressor.jl")
 include("Components/expander.jl")
 include("Components/HeatExchangers.jl")
 include("Components/valve.jl")
+include("Components/recuperator.jl")
 
 include("Plotting/PhasePlot.jl")
 end
