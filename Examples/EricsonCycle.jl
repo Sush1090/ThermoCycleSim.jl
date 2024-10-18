@@ -11,9 +11,9 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
 @named comp = Compressor2(_system, fluid =fluid)
-@named heatsrc = IsobaricHeatSource(Q_dot=1e3,fluid=fluid)
+@named heatsrc = IsobaricHeatSource(Q_dot=1e5,fluid=fluid)
 @named exp = Expander2(_system,fluid= fluid)
-@named heatsink = IsobaricHeatSink(Q_dot=-1e3,fluid=fluid)
+@named heatsink = IsobaricHeatSink(Q_dot=-1e5+867.478,fluid=fluid)
 @named sink = MassSink(fluid = fluid)
 
 
@@ -39,3 +39,13 @@ sol = solve(prob)
 
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
+
+propx =:T_in
+propy =:s_in
+propp =:p_in
+proph =:h_in
+TT = [sol[getproperty(i, propx)][1] for i in plot_sys]
+ss = [sol[getproperty(i, propy)][1] for i in plot_sys]
+pp = [sol[getproperty(i, propp)][1] for i in plot_sys]
+hh = [sol[getproperty(i, proph)][1] for i in plot_sys]
+scatter(ss,TT)
