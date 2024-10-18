@@ -3,7 +3,7 @@ using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 @independent_variables t
 fluid = "Argon"
-_system = Isothermal_Δp(20) # fix the isentropic Efficiency of compressor and pressre ratio
+_system = Isothermal_Δp(40) # fix the isentropic Efficiency of compressor and pressre ratio
 
 start_T = 300; # Temperature at source 
 start_p = 101325# pressure at source.
@@ -40,12 +40,12 @@ sol = solve(prob)
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
 
-propx =:T_in
-propy =:s_in
-propp =:p_in
-proph =:h_in
-TT = [sol[getproperty(i, propx)][1] for i in plot_sys]
-ss = [sol[getproperty(i, propy)][1] for i in plot_sys]
-pp = [sol[getproperty(i, propp)][1] for i in plot_sys]
-hh = [sol[getproperty(i, proph)][1] for i in plot_sys]
-scatter(ss,TT)
+# propx =:T_in
+# propy =:s_in
+# propp =:p_in
+# proph =:h_in
+# TT = [sol[getproperty(i, propx)][1] for i in plot_sys]
+# ss = [sol[getproperty(i, propy)][1] for i in plot_sys]
+# pp = [sol[getproperty(i, propp)][1] for i in plot_sys]
+# hh = [sol[getproperty(i, proph)][1] for i in plot_sys]
+# scatter(ss,TT)

@@ -19,7 +19,7 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 @named exp = Expander(_system,fluid= fluid)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
-@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=1)
+@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=5)
 
 # Define equations
 eqs = [
