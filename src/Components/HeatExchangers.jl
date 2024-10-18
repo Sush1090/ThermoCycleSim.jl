@@ -115,7 +115,7 @@ function IsobaricHeatSink(;name,Q_dot,fluid)
      end
    eqs = [  outport.mdot ~ abs(inport.mdot) 
             outport.p ~ inport.p
-            outport.h ~ inport.h - Q_dot/outport.mdot
+            outport.h ~ inport.h + Q_dot/outport.mdot
             P ~ abs(inport.mdot)*(outport.h - inport.h)
             s_in ~ PropsSI("S","H",inport.h,"P",inport.p,fluid)
             p_in ~ inport.p
