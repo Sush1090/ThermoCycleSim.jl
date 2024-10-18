@@ -43,6 +43,7 @@ It provides the following components:
     4. Evaporator
     5. Condensor
     6. Heat Source - Temperature independent
+    7. Recuperator for the ORC
 
  <!-- It also provides basic functions that find the pressure to match the pitch points.  -->
 ## Installation
