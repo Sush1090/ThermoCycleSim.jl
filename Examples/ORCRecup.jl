@@ -19,7 +19,7 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 @named exp = Expander(_system,fluid= fluid)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
-@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=3)
+@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=1)
 
 # Define equations
 eqs = [
@@ -49,4 +49,4 @@ sol = solve(prob)
 
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
-CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
+#CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
