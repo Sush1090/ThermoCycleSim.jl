@@ -17,9 +17,9 @@ Makes single node at ports. This node is Pressure,Enthalpy and Massflowrate
 """
 @connector  function CoolantPort(;name) 
     vars = @variables begin 
-        p(t),  [input = true]
-        h(t)
-        mdot(t), [connect = Flow] # alternates sign of variable after every component.
+        p(t),  [description = "Pressure (Pa)",input = true]
+        h(t), [description = "Enthalpy (J/kg)",input = true]
+        mdot(t), [description = "Mass Flow Rate (kg/s)",input = true] # alternates sign of variable after every component.
     end
     ODESystem(Equation[], t, vars, [];name=name)
 end
@@ -46,7 +46,7 @@ end
 
 
 """
-Mass source -  Use when the cycle needs a start point. Requires initial temperature,pressure and Massflowrate
+Mass source -  Use when the cycle needs a start point. Requires initial enthalpy,pressure and Massflowrate
 """
 function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5,fluid) 
     @named port = CoolantPort()
