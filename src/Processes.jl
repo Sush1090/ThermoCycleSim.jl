@@ -81,7 +81,10 @@ export IsothermalCompression
 function IsothermalExpansion(πc, h_in, p_in,fluid)
     T_in = PropsSI("T", "H", h_in, "P", p_in, fluid)
     h_out = PropsSI("H", "T", T_in, "P", p_in/πc, fluid)
-    return h_out
+    T_sat = PropsSI("T", "Q", 0, "P", p_in, fluid)
+    Base.ifelse(T_in<=T_sat,(return h_in),(return h_out))
+
+    #return h_out
 end
 @register_symbolic IsothermalExpansion(πc, h_in, p_in,fluid)
 export IsothermalExpansion

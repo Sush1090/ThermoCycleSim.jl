@@ -75,50 +75,6 @@ function Compressor(type::Isentropic_η=Isentropic_η();name,fluid)
 end
 
 
-struct Isothermal_Δp
-    πc
-end
-export Isothermal_Δp
-
-function Compressor2(type::Isothermal_Δp;name,fluid)
-    @unpack πc = type
-    @named inport = CoolantPort()
-    @named outport = CoolantPort()
-    para = @parameters begin
-        
-    end
-    vars = @variables begin
-        P(t)
-        s_in(t)
-        p_in(t)
-        T_in(t)
-        h_in(t)
-        ρ_in(t)
-
-        s_out(t)
-        p_out(t)
-        T_out(t)
-        h_out(t)
-        ρ_out(t)
-     end
-   eqs = [  outport.mdot ~ abs(inport.mdot) 
-            outport.p ~ πc * inport.p
-            outport.h ~ IsothermalCompression(πc, inport.h, inport.p,fluid)
-            P ~ abs(inport.mdot)*(outport.h - inport.h)
-            s_in ~ PropsSI("S","H",inport.h,"P",inport.p,fluid)
-            p_in ~ inport.p
-            T_in ~ PropsSI("T","H",inport.h,"P",inport.p,fluid)
-            h_in ~ inport.h
-            ρ_in ~ PropsSI("D","H",inport.h,"P",inport.p,fluid)
-            s_out ~ PropsSI("S","H",outport.h,"P",outport.p,fluid)
-            p_out ~ outport.p
-            T_out ~ PropsSI("T","H",outport.h,"P",outport.p,fluid)
-            h_out ~ outport.h
-            ρ_out ~ PropsSI("D","H",outport.h,"P",outport.p,fluid)
-   ]
-   compose(ODESystem(eqs, t, vars, para;name), inport, outport)
-end
-
-export Compressor, Compressor2
+export Compressor
 
 

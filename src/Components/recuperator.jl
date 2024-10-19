@@ -29,7 +29,7 @@ end
 export Recuperator_TemperatureOut
 
 function Recuperator(type::RecuperatorORC;name,fluid,ΔT_sat_diff)
-    @assert ΔT_sat_diff > 1e-3 "For safety from saturation curve of CoolProp"
+    @assert ΔT_sat_diff > 1e-3 "Keep ΔT_sat_diff > 1e-3, for safety from saturation curve of CoolProp"
     @named inport_gas = CoolantPort()
     @named outport_gas = CoolantPort()
     @named inport_liquid = CoolantPort()
