@@ -120,5 +120,29 @@ end
 
 
 @testset "Valve" begin
-    
+
+fluid = "R134A"
+@independent_variables t
+start_T = 300;
+start_p = PropsSI("P","Q",0,"T",start_T,fluid) 
+start_h = PropsSI("H","Q",0,"P",start_p,fluid); start_mdot = 0.2 #kg/s
+
+valve_system  = IsenthalpicExpansionValve(4.5)
+
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
+@named exp = Valve(valve_system,fluid= fluid)
+@named sink = MassSink(fluid = fluid)
+
+eqs = [
+    connect(source.port,exp.inport)
+    connect(exp.outport,sink.port)
+]
+systems = [source,exp,sink]
+@named test_condensor = ODESystem(eqs, t, systems=systems)
+u0 = []
+tspan = (0.0, 1.0)
+sys = structural_simplify(test_condensor)
+prob = ODEProblem(sys,u0,tspan,guesses = [])
+sol = solve(prob)
+@test isapprox(sol[source.h][1],sol[sink.h][1]) 
 end
