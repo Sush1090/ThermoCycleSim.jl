@@ -1,11 +1,11 @@
 using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
-global fluid = "R245fa"
+global fluid = "Toluene"
 function ORC(x,p)
 
     @independent_variables t
   
-    _system = Isentropic_η(η = 0.9,πc = x[2]) 
+    _system = Isentropic_η(η = 0.75,πc = x[2]) 
     start_T = x[1]; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 
     ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T;
@@ -40,15 +40,14 @@ function ORC(x,p)
     #exp_phase = PhaseSI("H",sol[exp.h_out][1],"P",sol[exp.p_out][1],fluid)
     
 
-    #@show
-     η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
+    @show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1] 
 
     penalty1 = 0     # for outlet to be gas phase
     # if exp_phase != "gas"
     #     penalty1 = abs(η)
     # end
 
-    if sol[exp.T_out][1] <= sol[cond.T_sat][1] + 3
+    if sol[exp.T_out][1] <= sol[cond.T_sat][1] 
         penalty1 = abs(η)
     end
     @assert p[1]>p[2]
@@ -63,7 +62,7 @@ function ORC(x,p)
     end
     cost = η + penalty1 + penalty2  +penalty3
 
-    #@show cost
+    @show cost
     Compute_cycle_error(sol,systems)
 
     return cost
@@ -85,19 +84,27 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 using Optimization, OptimizationMetaheuristics
 
 #[start_T,πc,T_sh]
-x0 = [300,5,100]
-p = [365,355]
+x0 = [250,5,2]
+p = [275,274]
 
 p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
 p_crit = PropsSI("PCRIT",fluid)
 πc_min = p_crit/p_max_start
 
 f = OptimizationFunction(ORC)
+# function f_parallel(X,p)
+#     fitness = zeros(size(X,1))
+#     Threads.@threads for i in 1:size(X,1)
+#         fitness[i] = ORC(X[i,:],p)
+#     end
+#     fitness
+# end
+
 # prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
 # sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
 
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [280, 1.1,2], ub = [300, πc_min,100])
-sol = solve(prob, DE(), maxiters = 50, maxtime = 1000.0)
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [250, 1.1,2], ub = [250, πc_min,2])
+sol = solve(prob, DE(), maxiters = 50, maxtime = 100.0)
 
 if (f(sol.u,p) >=0)
     @warn "No Feasible point found"
