@@ -46,8 +46,9 @@ end
 @register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid,η)
 export IsentropicExpansion
 
+
 """
-`IsothermalCompression(πc, h_in, p_in,fluid)`
+`IsochoricCompression(πc, h_in, p_in,fluid)`
 
 * Arguments:
     1. `πc`   : Pressure Ratio
@@ -55,20 +56,20 @@ export IsentropicExpansion
     3. `p_in` : Inlet Pressure
     4. `fluid`: Fluid
 
-* Output -> Outlet enthalpy after Isothermal Compression
+* Output -> Outlet enthalpy after isochoric compression
 """
-function IsothermalCompression(πc, h_in, p_in,fluid)
-    T_in = PropsSI("T", "H", h_in, "P", p_in, fluid)
-    h_out = PropsSI("H", "T", T_in, "P",πc*p_in, fluid)
+function IsochoricCompression(πc, h_in, p_in,fluid)
+    v_in = 1/PropsSI("D", "H", h_in, "P", p_in, fluid)
+    h_out =  PropsSI("H", "D", 1/v_in, "P", πc*p_in, fluid)
     return h_out
 end
-@register_symbolic IsothermalCompression(πc, h_in, p_in,fluid)
-export IsothermalCompression
+@register_symbolic IsochoricCompression(πc, h_in, p_in,fluid)
+export IsochoricCompression
 
 
 
 """
-`IsothermalExpansion(πc, h_in, p_in,fluid)`
+`IsochoricExpansion(πc, h_in, p_in,fluid)`
 
 * Arguments:
     1. `πc`   : Pressure Ratio
@@ -76,15 +77,54 @@ export IsothermalCompression
     3. `p_in` : Inlet Pressure
     4. `fluid`: Fluid
 
-* Output -> Outlet enthalpy after Isothermal Expansion
+* Output -> Outlet enthalpy after isochoric expansion
 """
-function IsothermalExpansion(πc, h_in, p_in,fluid)
-    T_in = PropsSI("T", "H", h_in, "P", p_in, fluid)
-    h_out = PropsSI("H", "T", T_in, "P", p_in/πc, fluid)
-    T_sat = PropsSI("T", "Q", 0, "P", p_in, fluid)
-    Base.ifelse(T_in<=T_sat,(return h_in),(return h_out))
-
-    #return h_out
+function IsochoricExpansion(πc, h_in, p_in,fluid)
+    v_in = 1/PropsSI("D", "H", h_in, "P", p_in, fluid)
+    h_out =  PropsSI("H", "D", 1/v_in, "P", p_in/πc, fluid)
+    return h_out
 end
-@register_symbolic IsothermalExpansion(πc, h_in, p_in,fluid)
-export IsothermalExpansion
+@register_symbolic IsochoricExpansion(πc, h_in, p_in,fluid)
+export IsochoricExpansion
+# """
+# `IsothermalCompression(πc, h_in, p_in,fluid)`
+
+# * Arguments:
+#     1. `πc`   : Pressure Ratio
+#     2. `h_in` : Inlet Enthalpy
+#     3. `p_in` : Inlet Pressure
+#     4. `fluid`: Fluid
+
+# * Output -> Outlet enthalpy after Isothermal Compression
+# """
+# function IsothermalCompression(πc, h_in, p_in,fluid)
+#     T_in = PropsSI("T", "H", h_in, "P", p_in, fluid)
+#     h_out = PropsSI("H", "T", T_in, "P",πc*p_in, fluid)
+#     return h_out
+# end
+# @register_symbolic IsothermalCompression(πc, h_in, p_in,fluid)
+# export IsothermalCompression
+
+
+
+# """
+# `IsothermalExpansion(πc, h_in, p_in,fluid)`
+
+# * Arguments:
+#     1. `πc`   : Pressure Ratio
+#     2. `h_in` : Inlet Enthalpy
+#     3. `p_in` : Inlet Pressure
+#     4. `fluid`: Fluid
+
+# * Output -> Outlet enthalpy after Isothermal Expansion
+# """
+# function IsothermalExpansion(πc, h_in, p_in,fluid)
+#     T_in = PropsSI("T", "H", h_in, "P", p_in, fluid)
+#     h_out = PropsSI("H", "T", T_in, "P", p_in/πc, fluid)
+#     T_sat = PropsSI("T", "Q", 0, "P", p_in, fluid)
+#     Base.ifelse(T_in<=T_sat,(return h_in),(return h_out))
+
+#     #return h_out
+# end
+# @register_symbolic IsothermalExpansion(πc, h_in, p_in,fluid)
+# export IsothermalExpansion
