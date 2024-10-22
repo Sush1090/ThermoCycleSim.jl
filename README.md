@@ -13,7 +13,7 @@ It is for steady state calculations, hence the evaporators and compressors are m
 
 It is extendible as users can add their own component in the following manner 
 
-```
+```julia
 function MyComp(type::abc;name,...)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
