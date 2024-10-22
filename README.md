@@ -129,9 +129,7 @@ The cycles created can be wrapped with functions and sent to optimization routin
 
 The most trusted algorithms for thermodynamic optimizations are Genetic Algorithms. It is well integrated with
 [Optimization.jl](https://docs.sciml.ai/Optimization/stable/) and [Metaheuristics.jl](https://github.com/jmejia8/Metaheuristics.jl)
-
-Note: The heuristic approach will not always converge. But will return the best answer in the possible iterations.   
-
+ 
 Usage Framework 
 
 ```julia
