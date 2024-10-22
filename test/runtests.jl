@@ -79,6 +79,7 @@ in_phase_test = PhaseSI("T",sol[evporator.T_in][1],"P",sol[evporator.p_in][1],fl
 @test out_phase_test == out_phase
 @test isapprox(sol[evporator.T_out][1]-ΔT_sh,sol[evporator.T_sat][1])
 @test in_phase_test == in_phase_liquid
+@test sol[evporator.h_out][1] >= sol[evporator.h_in][1]
 end
 #@testset 
 
@@ -115,7 +116,7 @@ in_phase_test = PhaseSI("T",sol[condensor.T_in][1],"P",sol[condensor.p_in][1],fl
 @test out_phase_test == out_phase
 @test isapprox(sol[condensor.T_out][1]+ΔT_sc,sol[condensor.T_sat][1])
 @test in_phase_test == in_phase
-
+@test sol[condensor.h_out][1] <= sol[condensor.h_in][1]
 end
 
 
