@@ -1,7 +1,7 @@
 name = "CoolPropCycles"
 uuid = "b01af851-7cff-425c-b4a4-ed45d3481e5c"
 authors = ["Sushrut"]
-version = "1.0.0-DEV"
+version = "v0.1.0"
 
 [deps]
 CoolProp = "e084ae63-2819-5025-826e-f8e611a84251"
