@@ -118,7 +118,7 @@ Compute_cycle_error(sol,systems)
 ## Phase Diagram Plotting
 
 As of now the direct plotting of T-S phase digram of the cycle is provided. It requires the `system` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
-```
+```julia
 CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```
 
