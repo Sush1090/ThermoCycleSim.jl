@@ -12,6 +12,7 @@ OptimizationMetaheuristics = "3aafef2f-86ae-4776-b337-85a36adf0b55"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 
 [compat]
+OptimizationMetaheuristics = "0.3"
 julia = "1.6.7"
 
 [extras]
