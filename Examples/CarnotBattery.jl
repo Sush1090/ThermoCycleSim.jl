@@ -38,7 +38,7 @@ function HP(x,p)
     u0 = []
     tspan = (0.0, 10.0)
     sys = structural_simplify(hp)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
 
     COP = sol[cond.P][1]/sol[comp.P][1]
@@ -88,7 +88,7 @@ function ORC(x,p)
     u0 = []
     tspan = (0.0, 100.0)
     sys = structural_simplify(orc)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
     
     η = (sol[expander.P][1] .+ sol[comp.P][1])./sol[evap.P][1]

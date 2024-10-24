@@ -19,6 +19,35 @@ macro load_fluid(x::AbstractString)
     return ThermodynamicCycleSim.set_fluid
 end
 export @load_fluid
+
+struct ThermoState
+    mdot
+    h
+    p
+    fluid
+    function ThermoState(;mdot,h,p,fluid=set_fluid)
+        new(mdot,h,p,fluid)
+    end
+end
+export ThermoState
+
+function initilize_state(;T_start=nothing,p_start=nothing,mdot=nothing,fluid = set_fluid)
+    if isnothing(fluid) == true
+        throw(error("Fluid not selected"))
+    end
+    if isnothing(T_start)
+        throw(error("Initial Temperature not chose"))
+    end
+    if isnothing(p_start)
+        throw(error("Initial Pressure not chose"))
+    end
+    if isnothing(mdot)
+        throw(error("mass flow rate not chose"))
+    end
+    h_start = PropsSI("H","T",T_start,"P",p_start,fluid)
+    return ThermoState(mdot = mdot,h=h_start,p = p_start,fluid=fluid)
+end
+export initilize_state
 """
 Makes single node at ports. This node is Pressure,Enthalpy and Massflowrate
 """
@@ -84,6 +113,11 @@ function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_md
         ρ ~ PropsSI("D","H",port.h,"P",port.p,fluid)
     ]
     compose(ODESystem(eqs, t, vars, para;name),port)
+end
+
+function MassSource(state::ThermoState;name)
+    @unpack mdot,h,p,fluid = state
+    return MassSource(name = name,source_pressure=p,source_enthalpy=h,source_mdot=mdot,fluid=fluid)
 end
 
 """

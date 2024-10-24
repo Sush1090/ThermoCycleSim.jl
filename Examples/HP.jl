@@ -4,23 +4,23 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
-fluid = "R245CA"
-@load_fluid "R245CA"
+@load_fluid "R134A"
 _system = Isentropic_η(η = 0.8,πc = 7.5) # fix the isentropic Efficiency of compressor and pressre ratio
 valve_system  = IsenthalpicExpansionValve(7.5)
-start_T = 250; # Temperature at source 
-start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e2 # pressure at source. For HP we need gas at source
-@assert PhaseSI("T",start_T,"P",start_p,fluid) == "gas"
-ΔT_superheat = start_T - PropsSI("T","P",start_p,"Q",0,fluid) ; # ensure the superheat temperature to reach bck to starting state.
-start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
+start_T = 260; # Temperature at source 
+start_p = PropsSI("P","Q",1,"T",start_T-10,"R134A") - 1e2 # pressure at source. For HP we need gas at source
+@assert PhaseSI("T",start_T,"P",start_p,"R134A") == "gas"
+ΔT_superheat = start_T - PropsSI("T","P",start_p,"Q",0,"R134A") ; # ensure the superheat temperature to reach bck to starting state.
+start_mdot = 0.2 #kg/s
 
+state_init = initilize_state(T_start = start_T,p_start=start_p,mdot = start_mdot) 
 
-@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-@named comp = Compressor(_system,fluid = fluid)
-@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0],fluid = fluid)
+@named source = MassSource(state_init)
+@named comp = Compressor(_system)
+@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0])
 @named expander = Valve(valve_system)
-@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0],fluid = fluid)
-@named sink = MassSink(fluid = fluid)
+@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0])
+@named sink = MassSink()
 
 # Define equations
 eqs = [
