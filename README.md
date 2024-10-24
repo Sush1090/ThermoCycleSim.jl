@@ -65,14 +65,13 @@ Note: sign convention: Power supplied to the system is +ve while power generated
 Example of Organic Rankine Cycle using R134A
 
 ```julia
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp, Plots
-
+using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 @independent_variables t
-fluid = "R134A"
-_system = Isentropic_η(η = 0.8,πc = 5) # fix the isentropic Efficiency of compressor and pressre ratio
+@load_fluid "R245CA"
+_system = Isentropic_η(η =0.75,πc =5.5) # fix the isentropic Efficiency of compressor and pressre ratio
 
-start_T =    290; # Temperature at source 
+start_T =     260; # Temperature at source 
 start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
 # As it is ORC the inlet state is liquid and bit away from saturation curv. Hence 1e3Pa of pressure is added
 ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T; # ensure the subcoolin temperature to reach bck to starting state.
@@ -80,12 +79,12 @@ start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
 start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 
-@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,)
 @named comp = Compressor(_system, fluid =fluid)
-@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 19.4058339236015846,fluid = fluid)
-@named exp = Expander(_system,fluid= fluid)
-@named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
-@named sink = MassSink(fluid = fluid)
+@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 2.0031586104142693,)
+@named exp = Expander(_system,)
+@named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0])
+@named sink = MassSink()
 
 # Define equations
 eqs = [
@@ -100,18 +99,17 @@ systems=[source,comp,evap,exp,cond,sink] # Define system
 @named dis_test = ODESystem(eqs, t, systems=systems)
 
 u0 = []
-tspan = (0.0, 10.0)
+tspan = (0.0, 100.0)
 sys = structural_simplify(dis_test)
 prob = ODEProblem(sys,u0,tspan,guesses = [])
 sol = solve(prob)
-
-
 #compute Efficiency of the cycle.
 #Note: sign convetion: Power supplied to the system is +ve while from thee system is -ve
-@show η = (sol[exp.P][1] + sol[comp.P][1])/sol[evap.P][1]
+@show η = (sol[exp.P] .+ sol[comp.P])./sol[evap.P]
 
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
+ThermodynamicCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```
 
 
