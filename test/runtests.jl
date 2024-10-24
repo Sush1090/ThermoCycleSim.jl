@@ -1,4 +1,4 @@
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 using Test
 
 @testset "Isentropic Process" begin
