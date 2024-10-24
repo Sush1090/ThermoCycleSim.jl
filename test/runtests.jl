@@ -1,8 +1,16 @@
 using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
 using Test
 
+
+@testset "Gloabal Variable fluid" begin
+    fluid = "R134A"
+    setglobal!(CoolPropCycles,:set_fluid,fluid)
+    @test set_fluid == fluid
+end
+
 @testset "Isentropic Process" begin
     fluid = "R134A"
+    setglobal!(CoolPropCycles,:set_fluid,fluid)
     _system = Isentropic_η(η = 1,πc = 5)
     @independent_variables t
     start_T = 300;
@@ -12,10 +20,10 @@ using Test
     start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 
-    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-    @named comp = Compressor(_system, fluid =fluid)
-    @named exp = Expander(_system,fluid= fluid)
-    @named sink = MassSink(fluid = fluid)
+    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    @named comp = Compressor(_system)
+    @named exp = Expander(_system)
+    @named sink = MassSink()
 
     eqs = [
         connect(source.port,comp.inport)
@@ -49,14 +57,15 @@ end
     in_phase_liquid = "liquid"
     ΔT_sh = 5
     fluid = "R134A"
+    setglobal!(CoolPropCycles,:set_fluid,fluid)
     @independent_variables t
     start_T = 300;
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3
     start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
-    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-    @named evporator = SimpleEvaporator(ΔT_sh = ΔT_sh,fluid = fluid)
-    @named sink = MassSink(fluid = fluid)
+    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    @named evporator = SimpleEvaporator(ΔT_sh = ΔT_sh)
+    @named sink = MassSink()
 
     eqs = [
         connect(source.port,evporator.inport)
@@ -85,14 +94,15 @@ end
     in_phase = "gas"
     ΔT_sc = 3
     fluid = "R134A"
+    setglobal!(CoolPropCycles,:set_fluid,fluid)
     @independent_variables t
     start_T = 300;
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) - 101325
     start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
-    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-    @named condensor = SimpleCondensor(ΔT_sc = ΔT_sc,fluid = fluid)
-    @named sink = MassSink(fluid = fluid)
+    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    @named condensor = SimpleCondensor(ΔT_sc = ΔT_sc)
+    @named sink = MassSink()
 
     eqs = [
         connect(source.port,condensor.inport)
@@ -118,6 +128,7 @@ end
 
 @testset "Valve" begin
     fluid = "R134A"
+    setglobal!(CoolPropCycles,:set_fluid,fluid)
     @independent_variables t
     start_T = 300;
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) 
@@ -125,9 +136,9 @@ end
 
     valve_system  = IsenthalpicExpansionValve(4.5)
 
-    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-    @named exp = Valve(valve_system,fluid= fluid)
-    @named sink = MassSink(fluid = fluid)
+    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    @named exp = Valve(valve_system)
+    @named sink = MassSink()
 
     eqs = [
         connect(source.port,exp.inport)
@@ -161,3 +172,4 @@ end
     v_out_isothermal = 1/PropsSI("D","H",h_out_isochoric,"P",p_in/πc,fluid)
     @test isapprox(v_out_isothermal,v_in)
 end
+
