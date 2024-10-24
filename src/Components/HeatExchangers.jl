@@ -28,10 +28,7 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function IsobaricHeatSource(;name,Q_dot,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function IsobaricHeatSource(;name,Q_dot,fluid)
     @assert Q_dot >= 0
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -95,10 +92,7 @@ export IsobaricHeatSource
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function IsobaricHeatSink(;name,Q_dot,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function IsobaricHeatSink(;name,Q_dot,fluid)
     @assert Q_dot <= 0 
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -164,10 +158,7 @@ export IsobaricHeatSink
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function Preheater(;name,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function Preheater(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -236,10 +227,7 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function TwoPhaseEvap(;name,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function TwoPhaseEvap(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -310,10 +298,7 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function SuperHeat(;name,ΔT_sh,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function SuperHeat(;name,fluid,ΔT_sh,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -388,10 +373,7 @@ end
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperHeat`      : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function SimpleEvaporator(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sh)
     @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
     @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
@@ -472,10 +454,7 @@ export SimpleEvaporator, SuperHeat,Preheater,TwoPhaseEvap
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function Precooler(;name,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function Precooler(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -546,10 +525,7 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`  
 """
-function TwoPhaseCond(;name,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function TwoPhaseCond(;name,fluid,Δp)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -622,10 +598,8 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function SuperCooler(;name,ΔT_sc,Δp,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function SuperCooler(;name,fluid,ΔT_sc,Δp)
+    
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -701,10 +675,7 @@ end
     4. `TwoPhaseCond`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function SimpleCondensor(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sc)
     @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
     @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()

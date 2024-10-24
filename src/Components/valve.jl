@@ -6,10 +6,7 @@ end
 """
 `Valve(;name,πc,fluid): Isenthalpic valve`
 """
-function Valve(;name,πc,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function Valve(;name,πc,fluid)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     vars = @variables begin
@@ -70,10 +67,7 @@ end
     1. `inport`  : `p` and `h`
     2. `outport` : `p` and `h`
 """
-function Valve(type::IsenthalpicExpansionValve;name,fluid::AbstractString = set_fluid)
-    if isnothing(fluid)
-        throw(error("Fluid not selected"))
-    end
+function Valve(type::IsenthalpicExpansionValve;name,fluid)
     @unpack πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
