@@ -19,7 +19,7 @@ function Valve(;name,πc,fluid::AbstractString = set_fluid)
         T_in(t)
         h_in(t)
         ρ_in(t)
-
+      
         s_out(t)
         p_out(t)
         T_out(t)
@@ -31,7 +31,7 @@ function Valve(;name,πc,fluid::AbstractString = set_fluid)
     end
     eqs = [
         outport.mdot ~ abs(inport.mdot) 
-        outport.p ~  inport.p/πc
+        πc ~  inport.p/outport.p
         outport.h ~ inport.h
         P ~ abs(inport.mdot)*(outport.h - inport.h)
         s_in ~ PropsSI("S","H",inport.h,"P",inport.p,fluid)

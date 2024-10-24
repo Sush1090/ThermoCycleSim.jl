@@ -51,15 +51,15 @@ function ORC(x,p)
         penalty1 = abs(η)
     end
     @assert p[1]>p[2]
-    penalty2 = 0 # evaporator outlte temperature is desired to be less than 380
+    penalty2 = 0 # evaporator outlte temperature is desired to be less than p[1]
     if (sol[evap.T_out][1] > p[1])
         penalty2 = abs(η)
     end
 
-     penalty3 = 0
-    if (sol[evap.T_sat][1] > p[2])
-        penalty3 = abs(η)
-    end
+      penalty3 = 0
+    # if (sol[evap.T_sat][1] > p[2])
+    #     penalty3 = abs(η)
+    # end
     cost = η + penalty1 + penalty2  +penalty3
 
     @show cost
@@ -84,26 +84,15 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 using Optimization, OptimizationMetaheuristics
 
 #[start_T,πc,T_sh]
-x0 = [250,5,2]
-p = [275,274]
+x0 = [300,5,2]
+p = [375,274]
 
 p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
 p_crit = PropsSI("PCRIT",fluid)
 πc_min = p_crit/p_max_start
 
 f = OptimizationFunction(ORC)
-# function f_parallel(X,p)
-#     fitness = zeros(size(X,1))
-#     Threads.@threads for i in 1:size(X,1)
-#         fitness[i] = ORC(X[i,:],p)
-#     end
-#     fitness
-# end
-
-# prob = Optimization.OptimizationProblem(f, x0, p, lb = [290, 1.1,2], ub = [300, 10,100])
-# sol = solve(prob, PSO(), maxiters = 100000, maxtime = 100.0)
-
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [250, 1.1,2], ub = [250, πc_min,2])
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [300, 1.1,2], ub = [300, πc_min,2])
 sol = solve(prob, DE(), maxiters = 50, maxtime = 100.0)
 
 if (f(sol.u,p) >=0)

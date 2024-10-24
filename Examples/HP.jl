@@ -13,7 +13,7 @@ start_p = PropsSI("P","Q",1,"T",start_T-10,"R134A") - 1e2 # pressure at source. 
 ΔT_superheat = start_T - PropsSI("T","P",start_p,"Q",0,"R134A") ; # ensure the superheat temperature to reach bck to starting state.
 start_mdot = 0.2 #kg/s
 
-state_init = initilize_state(T_start = start_T,p_start=start_p,mdot = start_mdot) 
+state_init = initialize_state(T_start = start_T,p_start=start_p,mdot = start_mdot) 
 
 @named source = MassSource(state_init)
 @named comp = Compressor(_system)

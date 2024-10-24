@@ -31,7 +31,7 @@ struct ThermoState
 end
 export ThermoState
 
-function initilize_state(;T_start=nothing,p_start=nothing,mdot=nothing,fluid = set_fluid)
+function initialize_state(;T_start=nothing,p_start=nothing,mdot=nothing,fluid = set_fluid)
     if isnothing(fluid) == true
         throw(error("Fluid not selected"))
     end
@@ -47,7 +47,7 @@ function initilize_state(;T_start=nothing,p_start=nothing,mdot=nothing,fluid = s
     h_start = PropsSI("H","T",T_start,"P",p_start,fluid)
     return ThermoState(mdot = mdot,h=h_start,p = p_start,fluid=fluid)
 end
-export initilize_state
+export initialize_state
 """
 Makes single node at ports. This node is Pressure,Enthalpy and Massflowrate
 """
@@ -153,6 +153,33 @@ function MassSink(;name,fluid = set_fluid)
    compose(ODESystem(eqs, t, vars, para;name),port)
 end
 
+function MassSink(state::ThermoState;name,fluid=set_fluid)
+    #@unpack mdot,h,p,fluid = state
+    @named    port = CoolantPort()
+    para = @parameters begin
+        
+    end
+    vars = @variables begin
+        mdot(t)
+        s(t)
+        p(t)
+        T(t)
+        h(t)
+        ρ(t)
+     end
+
+   eqs = [
+    port.p ~ state.p
+    port.h ~ h
+    mdot ~ state.mdot
+    s ~ PropsSI("S","H",port.h,"P",port.p,fluid)
+    p ~ state.p
+    T ~ PropsSI("T","H",port.h,"P",port.p,fluid)
+    h ~ state.h
+    ρ ~ PropsSI("D","H",port.h,"P",port.p,fluid)
+   ]
+   compose(ODESystem(eqs, t, vars, para;name),port)
+end
 
 """
 ComputeSpecificLatentHeat: Computes the specific latent heat of the give fluid at a particular varliable value. var1 should not be enthalpy or vapour quality
