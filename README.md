@@ -51,7 +51,7 @@ It provides the following components:
 In the Julia prompt, first type `]` and then:
 
 ```julia
-pkg> add https://github.com/Sush1090/CoolPropCycles.jl.git
+pkg> add https://github.com/Sush1090/ThermoCycles.jl.git
 ```
 
 ## Basic Usage
