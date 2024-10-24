@@ -2,6 +2,7 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
+fluid = "R245CA"
 @load_fluid "R245CA"
 _system = Isentropic_η(η =0.75,πc =5.5) # fix the isentropic Efficiency of compressor and pressre ratio
 
@@ -35,7 +36,7 @@ systems=[source,comp,evap,exp,cond,sink] # Define system
 u0 = []
 tspan = (0.0, 100.0)
 sys = structural_simplify(dis_test)
-prob = ODEProblem(sys,u0,tspan,guesses = [])
+prob = ODEProblem(sys,u0,tspan)
 sol = solve(prob)
 
 

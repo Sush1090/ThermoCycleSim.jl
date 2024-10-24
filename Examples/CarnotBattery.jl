@@ -10,7 +10,7 @@ function HP(x,p)
     fluid = "R134A"
     _system = Isentropic_η(η = 0.75,πc = x[1]) # fix the isentropic Efficiency of compressor and pressre ratio
     valve_system  = IsenthalpicExpansionValve(x[1])
-    start_T = 250; # Temperature at source 
+    start_T = 300; # Temperature at source 
     start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e2 # pressure at source. For HP we need gas at source
     @assert PhaseSI("T",start_T,"P",start_p,fluid) == "gas"
     ΔT_superheat = start_T - PropsSI("T","P",start_p,"Q",0,fluid) ; # ensure the superheat temperature to reach bck to starting state.
@@ -20,24 +20,24 @@ function HP(x,p)
     @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
     @named comp = Compressor(_system, fluid =fluid)
     @named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0],fluid = fluid)
-    @named exp = Valve(valve_system,fluid= fluid)
+    @named expander = Valve(valve_system,fluid= fluid)
     @named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0],fluid = fluid)
     @named sink = MassSink(fluid = fluid)
 
     eqs = [
         connect(source.port,comp.inport)
         connect(comp.outport,cond.inport)
-        connect(cond.outport,exp.inport)
-        connect(exp.outport,evap.inport)
+        connect(cond.outport,expander.inport)
+        connect(expander.outport,evap.inport)
         connect(evap.outport,sink.port)
     ]
-    systems=[source,comp,cond,exp,evap,sink] # Define system
+    systems=[source,comp,cond,expander,evap,sink] # Define system
 
-    @named HP = ODESystem(eqs, t, systems=systems)
+    @named hp = ODESystem(eqs, t, systems=systems)
 
     u0 = []
     tspan = (0.0, 10.0)
-    sys = structural_simplify(HP)
+    sys = structural_simplify(hp)
     prob = ODEProblem(sys,u0,tspan,guesses = [])
     sol = solve(prob)
 
@@ -46,7 +46,7 @@ function HP(x,p)
     if COP > 0
         COP = 0
     end
-    if sol[cond.T_sat][1] <  p[1] # minimum temperature needed. Else might have ∞*0 case for CB
+    if sol[cond.T_sat][1] < start_T + p[1] # minimum temperature needed. Else might have ∞*0 case for CB
         COP = 0
     end
 
@@ -59,7 +59,7 @@ function ORC(x,p)
     fluid = "R601A"
     _system = Isentropic_η(η =0.75,πc =x[1]) # fix the isentropic Efficiency of compressor and pressre ratio
 
-    start_T =     260; # Temperature at source 
+    start_T =     300; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
     # As it is ORC the inlet state is liquid and bit away from saturation curv. Hence 1e3Pa of pressure is added
     ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T; # ensure the subcoolin temperature to reach bck to starting state.
@@ -70,18 +70,18 @@ function ORC(x,p)
     @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
     @named comp = Compressor(_system, fluid =fluid)
     @named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = x[2],fluid = fluid)
-    @named exp = Expander(_system,fluid= fluid)
+    @named expander = Expander(_system,fluid= fluid)
     @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
     @named sink = MassSink(fluid = fluid)
 
     eqs = [
         connect(source.port,comp.inport)
         connect(comp.outport,evap.inport)
-        connect(evap.outport,exp.inport)
-        connect(exp.outport,cond.inport)
+        connect(evap.outport,expander.inport)
+        connect(expander.outport,cond.inport)
         connect(cond.outport,sink.port)
     ]
-    systems=[source,comp,evap,exp,cond,sink] # Define system
+    systems=[source,comp,evap,expander,cond,sink] # Define system
 
     @named orc = ODESystem(eqs, t, systems=systems)
 
@@ -91,7 +91,7 @@ function ORC(x,p)
     prob = ODEProblem(sys,u0,tspan,guesses = [])
     sol = solve(prob)
     
-    η = (sol[exp.P][1] .+ sol[comp.P][1])./sol[evap.P][1]
+    η = (sol[expander.P][1] .+ sol[comp.P][1])./sol[evap.P][1]
     
     if sol[evap.T_out][1] > p[1]
         η = 0;
@@ -115,7 +115,7 @@ function CB(x,p_hp)
 end
 # hp_pr,orc_pr,orc_suph
 x0 = [ 10.5,2.2,2.0]
-pp = [300]
+pp = [30]
 
 
 

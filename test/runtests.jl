@@ -1,6 +1,11 @@
 using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 using Test
 
+
+@testset "Global fluid setting" begin
+    
+end
+
 @testset "Isentropic Process" begin
     fluid = "R134A"
     setglobal!(ThermodynamicCycleSim,:set_fluid,fluid)

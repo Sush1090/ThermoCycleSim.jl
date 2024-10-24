@@ -101,7 +101,7 @@ systems=[source,comp,evap,exp,cond,sink] # Define system
 u0 = []
 tspan = (0.0, 100.0)
 sys = structural_simplify(dis_test)
-prob = ODEProblem(sys,u0,tspan,guesses = [])
+prob = ODEProblem(sys,u0,tspan)
 sol = solve(prob)
 #compute Efficiency of the cycle.
 #Note: sign convetion: Power supplied to the system is +ve while from thee system is -ve

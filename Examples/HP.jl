@@ -4,6 +4,7 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
+fluid = "R245CA"
 @load_fluid "R245CA"
 _system = Isentropic_η(η = 0.8,πc = 7.5) # fix the isentropic Efficiency of compressor and pressre ratio
 valve_system  = IsenthalpicExpansionValve(7.5)
@@ -14,29 +15,29 @@ start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e2 # pressure at source. For H
 start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 
-@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
-@named comp = Compressor(_system)
-@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0])
-@named exp = Valve(valve_system)
-@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0])
-@named sink = MassSink()
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
+@named comp = Compressor(_system,fluid = fluid)
+@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0],fluid = fluid)
+@named expander = Valve(valve_system)
+@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0],fluid = fluid)
+@named sink = MassSink(fluid = fluid)
 
 # Define equations
 eqs = [
     connect(source.port,comp.inport)
     connect(comp.outport,cond.inport)
-    connect(cond.outport,exp.inport)
-    connect(exp.outport,evap.inport)
+    connect(cond.outport,expander.inport)
+    connect(expander.outport,evap.inport)
     connect(evap.outport,sink.port)
 ]
-systems=[source,comp,cond,exp,evap,sink] # Define system
+systems=[source,comp,cond,expander,evap,sink] # Define system
 
 @named HP = ODESystem(eqs, t, systems=systems)
 
 u0 = []
 tspan = (0.0, 10.0)
 sys = structural_simplify(HP)
-prob = ODEProblem(sys,u0,tspan,guesses = [])
+prob = ODEProblem(sys,u0,tspan)
 sol = solve(prob)
 
 #compute COP
