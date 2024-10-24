@@ -14,6 +14,11 @@ PhaseSI(name1::AbstractString, value1::Real, name2::AbstractString, value2::Real
 
 global set_fluid = nothing
 
+macro load_fluid(x::AbstractString)
+    ThermodynamicCycleSim.set_fluid = x
+    return ThermodynamicCycleSim.set_fluid
+end
+export @load_fluid
 """
 Makes single node at ports. This node is Pressure,Enthalpy and Massflowrate
 """

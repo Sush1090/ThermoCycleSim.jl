@@ -3,7 +3,8 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 @independent_variables t
 fluid = "R601A"
-_system = Isentropic_η(η =0.75,πc =1.5) # fix the isentropic Efficiency of compressor and pressre ratio
+setglobal!(ThermodynamicCycleSim,:set_fluid,fluid)
+_system = Isentropic_η(η =0.75,πc =5.5) # fix the isentropic Efficiency of compressor and pressre ratio
 
 start_T =     260; # Temperature at source 
 start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
@@ -13,12 +14,12 @@ start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
 start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 
-@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,)
 @named comp = Compressor(_system, fluid =fluid)
-@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 2.0031586104142693,fluid = fluid)
-@named exp = Expander(_system,fluid= fluid)
-@named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
-@named sink = MassSink(fluid = fluid)
+@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 2.0031586104142693,)
+@named exp = Expander(_system,)
+@named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0])
+@named sink = MassSink()
 
 # Define equations
 eqs = [

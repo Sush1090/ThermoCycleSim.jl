@@ -4,8 +4,7 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
-fluid = "R245CA"
-setglobal!(ThermodynamicCycleSim,:set_fluid,fluid)
+@load_fluid "R245CA"
 _system = Isentropic_η(η = 0.8,πc = 7.5) # fix the isentropic Efficiency of compressor and pressre ratio
 valve_system  = IsenthalpicExpansionValve(7.5)
 start_T = 250; # Temperature at source 
