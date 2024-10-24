@@ -11,7 +11,7 @@ T_line(p,h,fluid) = PropsSI("T","P",p,"H",h,fluid)
 S_line(p,h,fluid) = PropsSI("S","P",p,"H",h,fluid)
 ρ_line(p,h,fluid) = PropsSI("D","P",p,"H",h,fluid)
 
-function LineData(f::Function,x1,y1,x2,y2,fluid::AbstractString;points = 100)
+function LineData(f::Function,x1,y1,x2,y2,fluid::AbstractString = set_fluid;points = 100)
     x = collect(range(x1,x2,points))
     y = collect(range(y1,y2,points))
     data = f.(x,y,fluid)
@@ -19,7 +19,7 @@ function LineData(f::Function,x1,y1,x2,y2,fluid::AbstractString;points = 100)
 end
 
 
-function CollectPhaseData(sol::ODESolution,system::Vector{ODESystem},fluid::AbstractString;points = 100,p_width::Tuple = (1e3,1e3), h_width::Tuple = (1e3,1e3))
+function CollectPhaseData(sol::ODESolution,system::Vector{ODESystem},fluid::AbstractString = set_fluid;points = 100,p_width::Tuple = (1e3,1e3), h_width::Tuple = (1e3,1e3))
     plot_sys = system[2:end-1];
     propx = :p
     propy = :h
@@ -38,7 +38,7 @@ function CollectPhaseData(sol::ODESolution,system::Vector{ODESystem},fluid::Abst
     return p_range,h_range,T_sat,s_sat_liquid,s_sat_gas,h_sat_liquid,h_sat_gas
 end
 
-function PhasePlot(type::PhasePlotType_TS,sol::ODESolution,system::Vector{ODESystem},fluid)
+function PhasePlot(type::PhasePlotType_TS,sol::ODESolution,system::Vector{ODESystem},fluid::AbstractString = set_fluid)
     plot_sys = system[2:end-1];
     propx = :p
     propy = :h
@@ -65,6 +65,15 @@ function PhasePlot(type::PhasePlotType_TS,sol::ODESolution,system::Vector{ODESys
     xlabel!("Entropy")
     ylabel!("Temperature")
     return fig1
+end
+
+function PhasePlot(type::PhasePlotType_PH,sol::ODESolution,system::Vector{ODESystem},fluid::AbstractString)
+    plot_sys = system[2:end-1];
+    propx = :p_in
+    propy = :h_in
+    pp = [sol[getproperty(i, propx)][1] for i in plot_sys]
+    hh = [sol[getproperty(i, propy)][1] for i in plot_sys]
+    
 end
 
 export PhasePlot
