@@ -3,7 +3,9 @@ using Test
 
 
 @testset "Global fluid setting" begin
-    
+    fluid = "R601"
+    @load_fluid "R601"
+    @test ThermodynamicCycleSim.set_fluid == fluid
 end
 
 @testset "Isentropic Process" begin
@@ -33,7 +35,7 @@ end
     u0 = []
     tspan = (0.0, 1.0)
     sys = structural_simplify(test_isentropic)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
     bool1 = isapprox(sol[comp.s_in][1],sol[comp.s_out][1])
     bool2 = isapprox(sol[exp.s_in][1],sol[exp.s_out][1])
@@ -73,7 +75,7 @@ end
     u0 = []
     tspan = (0.0, 1.0)
     sys = structural_simplify(test_evap)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
 
     out_phase_test = PhaseSI("T",sol[evporator.T_out][1],"P",sol[evporator.p_out][1],fluid)
@@ -109,7 +111,7 @@ end
     u0 = []
     tspan = (0.0, 1.0)
     sys = structural_simplify(test_condensor)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
 
     out_phase_test = PhaseSI("T",sol[condensor.T_out][1],"P",sol[condensor.p_out][1],fluid)
@@ -144,7 +146,7 @@ end
     u0 = []
     tspan = (0.0, 1.0)
     sys = structural_simplify(test_condensor)
-    prob = ODEProblem(sys,u0,tspan,guesses = [])
+    prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
     @test isapprox(sol[source.h][1],sol[sink.h][1]) 
 end
