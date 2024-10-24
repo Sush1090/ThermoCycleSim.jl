@@ -1,6 +1,6 @@
 
 
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 

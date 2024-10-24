@@ -1,6 +1,6 @@
 
 
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
@@ -44,4 +44,4 @@ sol = solve(prob)
 @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
-CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
+ThermodynamicCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)

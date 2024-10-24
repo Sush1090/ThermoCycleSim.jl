@@ -1,4 +1,4 @@
-using CoolPropCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 global fluid = "Toluene"
 function ORC(x,p)

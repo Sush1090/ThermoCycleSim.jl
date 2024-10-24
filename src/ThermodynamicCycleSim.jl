@@ -1,4 +1,4 @@
-module CoolPropCycles
+module ThermodynamicCycleSim
 
 # Write your package code here.
 
