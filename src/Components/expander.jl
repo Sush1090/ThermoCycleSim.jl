@@ -1,10 +1,10 @@
 
 """
-`Expander(type::Isentropic_η;name)`
+`Expander(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isentropic_η` contains --> isentropic effeiciency and pressure ratio parameters
-    
+    2. `fluid`: fluid
 *    Local Variables:
     1. `P`      : Power  
     2. `s_in`   : Inlet Entropy
@@ -22,7 +22,10 @@
     1. `inport`  : `p` and `h`
     2. `outport` : `p` and `h`
 """
-function Expander(type::Isentropic_η=Isentropic_η();name,fluid)
+function Expander(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @unpack η,πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()

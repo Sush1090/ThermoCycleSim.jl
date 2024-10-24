@@ -6,7 +6,7 @@ function HEX_type(;T_in = nothing,T_out = nothing,Qdot = nothing, mdot = nothing
 end
 
 """
-`IsobaricHeatSource(;name,Q_dot,fluid)`
+`IsobaricHeatSource(;name,Q_dot,fluid = set_fluid)`
    A heat source independent of temperature and no pressure drop
 *    Arguments: 
     1. `Q_dot`     : Total heat supplied
@@ -28,7 +28,10 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function IsobaricHeatSource(;name,Q_dot,fluid)
+function IsobaricHeatSource(;name,Q_dot,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @assert Q_dot >= 0
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -70,7 +73,7 @@ end
 export IsobaricHeatSource
 
 """
-`IsobaricHeatSink(;name,Q_dot,fluid)`
+`IsobaricHeatSink(;name,Q_dot,fluid = set_fluid)`
    A heat sink independent of temperature and no pressure drop
 *    Arguments: 
     1. `Q_dot`     : Total heat supplied
@@ -92,7 +95,10 @@ export IsobaricHeatSource
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function IsobaricHeatSink(;name,Q_dot,fluid)
+function IsobaricHeatSink(;name,Q_dot,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @assert Q_dot <= 0 
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -135,7 +141,7 @@ export IsobaricHeatSink
 
 
 """
-`Preheater(;name,fluid,Δp)`
+`Preheater(;name,Δp,fluid = set_fluid)`
     Preheater for the Evaporator.     
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -158,7 +164,10 @@ export IsobaricHeatSink
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function Preheater(;name,fluid,Δp)
+function Preheater(;name,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -204,7 +213,7 @@ function Preheater(;name,fluid,Δp)
     compose(ODESystem(eqs, t, vars, para;name), inport, outport)
 end
 """
-`TwoPhaseEvap(;name,fluid,Δp)`
+`TwoPhaseEvap(;name,Δp,fluid = set_fluid) `
     Twophase part for the Evaporator.     
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -227,7 +236,10 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function TwoPhaseEvap(;name,fluid,Δp)
+function TwoPhaseEvap(;name,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -274,7 +286,7 @@ function TwoPhaseEvap(;name,fluid,Δp)
 end
 
 """
-`SuperHeat(;name,fluid,ΔT_sh,Δp)`
+`SuperHeat(;name,ΔT_sh,Δp,fluid = set_fluid) `
     Superheated part of the evaporator.
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -298,7 +310,10 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function SuperHeat(;name,fluid,ΔT_sh,Δp)
+function SuperHeat(;name,ΔT_sh,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -346,7 +361,7 @@ end
 
 
 """
-`SimpleEvaporator(;name,fluid,Δp,ΔT_sh)`
+`SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid = set_fluid)`
     Composed of multiple `ODESystem` - `Preheater`, `TwoPhaseEvap`, and `SuperHeat`
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -373,7 +388,10 @@ end
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperHeat`      : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleEvaporator(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sh)
+function SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
     @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()
@@ -431,7 +449,7 @@ export SimpleEvaporator, SuperHeat,Preheater,TwoPhaseEvap
 
 
 """
-`Precooler(;name,fluid,Δp)`
+`Precooler(;name,Δp,fluid = set_fluid) `
     Precooler for the Condensor.     
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -454,7 +472,10 @@ export SimpleEvaporator, SuperHeat,Preheater,TwoPhaseEvap
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function Precooler(;name,fluid,Δp)
+function Precooler(;name,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -502,7 +523,7 @@ end
 
 
 """
-`TwoPhaseCond(;name,fluid,Δp)`
+`TwoPhaseCond(;name,Δp,fluid = set_fluid)`
     Twophase part for the Condensor.     
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -525,7 +546,10 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`  
 """
-function TwoPhaseCond(;name,fluid,Δp)
+function TwoPhaseCond(;name,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
@@ -574,7 +598,7 @@ end
 
 
 """
-`SuperCooler(;name,fluid,ΔT_sh,Δp)`
+`SuperCooler(;name,ΔT_sc,Δp,fluid = set_fluid) `
     SuperCooler part of the Condensor.
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -598,7 +622,10 @@ end
     1. `inport`         : `p` and `h`
     2. `outport`        : `p` and `h`
 """
-function SuperCooler(;name,fluid,ΔT_sc,Δp)
+function SuperCooler(;name,ΔT_sc,Δp,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     
     @named inport = CoolantPort()
     @named outport = CoolantPort()
@@ -648,7 +675,7 @@ end
 
 
 """
-`SimpleCondensor(;name,fluid,Δp,ΔT_sh)`
+`SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_fluid) `
     Composed of multiple `ODESystem` - `Precooler`, `TwoPhaseCond`, and `SuperCooler`
 *    Arguments: 
     1. `Δp`     : Pressure Drop across Evaporator
@@ -675,7 +702,10 @@ end
     4. `TwoPhaseCond`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleCondensor(;name,fluid,Δp::AbstractVector = [0,0,0],ΔT_sc)
+function SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
     @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
     @named inport = CoolantPort()

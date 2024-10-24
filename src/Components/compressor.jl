@@ -13,7 +13,7 @@ end
 export Isentropic_η
 
 """
-`Compressor(type::Isentropic_η;name)`
+`Compressor(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isentropic_η` contains --> isentropic effeiciency and pressure ratio parameters
@@ -35,7 +35,10 @@ export Isentropic_η
     1. `inport`  : `p` and `h`
     2. `outport` : `p` and `h`
 """
-function Compressor(type::Isentropic_η=Isentropic_η();name,fluid)
+function Compressor(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @unpack η,πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()

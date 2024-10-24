@@ -4,9 +4,10 @@ using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
-fluid = "R134A"
-_system = Isentropic_η(η = 0.8,πc = 4.5) # fix the isentropic Efficiency of compressor and pressre ratio
-valve_system  = IsenthalpicExpansionValve(4.5)
+fluid = "R245CA"
+setglobal!(ThermodynamicCycleSim,:set_fluid,fluid)
+_system = Isentropic_η(η = 0.8,πc = 7.5) # fix the isentropic Efficiency of compressor and pressre ratio
+valve_system  = IsenthalpicExpansionValve(7.5)
 start_T = 250; # Temperature at source 
 start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e2 # pressure at source. For HP we need gas at source
 @assert PhaseSI("T",start_T,"P",start_p,fluid) == "gas"
@@ -14,12 +15,12 @@ start_p = PropsSI("P","Q",1,"T",start_T,fluid) - 1e2 # pressure at source. For H
 start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 
-@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
-@named comp = Compressor(_system, fluid =fluid)
-@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0],fluid = fluid)
-@named exp = Valve(valve_system,fluid= fluid)
-@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0],fluid = fluid)
-@named sink = MassSink(fluid = fluid)
+@named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+@named comp = Compressor(_system)
+@named cond = SimpleCondensor(ΔT_sc = 1e-2,Δp = [0,0,0])
+@named exp = Valve(valve_system)
+@named evap = SimpleEvaporator(ΔT_sh = ΔT_superheat,Δp = [0,0,0])
+@named sink = MassSink()
 
 # Define equations
 eqs = [
@@ -44,4 +45,4 @@ sol = solve(prob)
 @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
-ThermodynamicCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
+ThermodynamicCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems)

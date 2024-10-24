@@ -28,7 +28,10 @@ end
 @register_symbolic Recuperator_TemperatureOut(T_gas_in,T_liquid_in,T_sat,ΔT_sat_diff)
 export Recuperator_TemperatureOut
 
-function Recuperator(type::RecuperatorORC;name,fluid,ΔT_sat_diff)
+function Recuperator(type::RecuperatorORC;name,ΔT_sat_diff,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @assert ΔT_sat_diff > 1e-3 "Keep ΔT_sat_diff > 1e-3, for safety from saturation curve of CoolProp"
     @named inport_gas = CoolantPort()
     @named outport_gas = CoolantPort()

@@ -12,6 +12,8 @@ PhaseSI(name1::AbstractString, value1::Real, name2::AbstractString, value2::Real
 @register_symbolic PhaseSI(name1::AbstractString, value1::Real, name2::AbstractString, value2::Real, fluid::AbstractString)
 
 
+global set_fluid = nothing
+
 """
 Makes single node at ports. This node is Pressure,Enthalpy and Massflowrate
 """
@@ -48,7 +50,10 @@ end
 """
 Mass source -  Use when the cycle needs a start point. Requires initial enthalpy,pressure and Massflowrate
 """
-function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5,fluid) 
+function MassSource(;name,source_pressure = 101305,source_enthalpy=1e6,source_mdot=5,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named port = CoolantPort()
     para = @parameters begin
 
@@ -79,7 +84,10 @@ end
 """
 Mass sink -  Use when the cycle needs a end point. Sets the final port input values to the variables
 """
-function MassSink(;name,fluid) 
+function MassSink(;name,fluid = set_fluid) 
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
     @named    port = CoolantPort()
     para = @parameters begin
         
