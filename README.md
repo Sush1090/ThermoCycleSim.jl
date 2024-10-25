@@ -122,7 +122,7 @@ CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 CoolPropCycles.PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
 ```
 ![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/PH_orc.png)
-![Temperature-Entropy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/TS_orc.png?raw=true)
+![Temperature-Entropy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/TS_orc.svg)
 
 ## Thermodynamic Cycle Optimization
 The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purely theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.
