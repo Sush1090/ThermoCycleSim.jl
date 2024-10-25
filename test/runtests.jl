@@ -1,16 +1,16 @@
-using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 using Test
 
 
 @testset "Global fluid setting" begin
     fluid = "R601"
     @load_fluid "R601"
-    @test ThermodynamicCycleSim.set_fluid == fluid
+    @test ThermoCycleSim.set_fluid == fluid
 end
 
 @testset "Isentropic Process" begin
     fluid = "R134A"
-    setglobal!(ThermodynamicCycleSim,:set_fluid,fluid)
+    @load_fluid "R134A"
     _system = Isentropic_η(η = 1,πc = 5)
     @independent_variables t
     start_T = 300;

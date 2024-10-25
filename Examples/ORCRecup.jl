@@ -1,4 +1,4 @@
-using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t

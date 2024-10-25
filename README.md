@@ -1,4 +1,4 @@
-# ThermodynamicCycleSim.jl
+# ThermoCycleSim.jl
 
 [![Build Status](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
@@ -51,7 +51,7 @@ It provides the following components:
 In the Julia prompt, first type `]` and then:
 
 ```julia
-pkg> add https://github.com/Sush1090/ThermodynamicCycleSim.jl.git
+pkg> add https://github.com/Sush1090/ThermoCycleSim.jl.git
 ```
 
 ## Basic Usage
@@ -65,7 +65,7 @@ Note: sign convention: Power supplied to the system is +ve while power generated
 Example of Organic Rankine Cycle using R134A
 
 ```julia
-using ThermodynamicCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 
 @independent_variables t
 @load_fluid "R245CA"

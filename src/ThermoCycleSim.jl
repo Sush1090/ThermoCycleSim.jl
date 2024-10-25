@@ -1,4 +1,4 @@
-module ThermodynamicCycleSim
+module ThermoCycleSim
 
 # Write your package code here.
 
