@@ -4,7 +4,7 @@ using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
 @independent_variables t
 fluid = "R134A"
 @load_fluid "R134A"
-_system = Isentropic_η(η =0.5,πc =2.8401937631776204) # fix the isentropic Efficiency of compressor and pressre ratio
+_system = Isentropic_η(η =0.5,πc =2.8) # fix the isentropic Efficiency of compressor and pressre ratio
 
 start_T =     290; # Temperature at source 
 start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e5 # pressure at source.
@@ -16,7 +16,7 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,)
 @named comp = Compressor(_system, fluid =fluid)
-@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 2.0331586104142693,)
+@named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = 2,)
 @named exp = Expander(_system,)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0])
 @named sink = MassSink()
