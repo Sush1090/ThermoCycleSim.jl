@@ -6,8 +6,8 @@ fluid = "R134A"
 @load_fluid "R134A"
 _system = Isentropic_η(η =0.5,πc =2.8401937631776204) # fix the isentropic Efficiency of compressor and pressre ratio
 
-start_T =     300; # Temperature at source 
-start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
+start_T =     290; # Temperature at source 
+start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e5 # pressure at source.
 # As it is ORC the inlet state is liquid and bit away from saturation curv. Hence 1e3Pa of pressure is added
 ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T; # ensure the subcoolin temperature to reach bck to starting state.
 @assert ΔT_subcool > 1e-3 # stay away from saturaton curve to aviod coolprop assertion
