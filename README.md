@@ -114,7 +114,7 @@ sol = solve(prob)
 
 ## Phase Diagram Plotting
 
-As of now the direct plotting of T-S a,d P-H phase digram of the cycle is provided. It requires the `system` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
+As of now the direct plotting of T-S and P-H phase diagram of the cycle is provided. It requires the `systems` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
 ```julia
 CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```
