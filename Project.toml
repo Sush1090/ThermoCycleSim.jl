@@ -1,7 +1,7 @@
 name = "ThermoCycleSim"
 uuid = "b01af851-7cff-425c-b4a4-ed45d3481e5c"
 authors = ["Sushrut"]
-version = "v0.1.0"
+version = "0.1.0"
 
 [deps]
 CoolProp = "e084ae63-2819-5025-826e-f8e611a84251"
@@ -10,15 +10,17 @@ ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
 Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
 OptimizationMetaheuristics = "3aafef2f-86ae-4776-b337-85a36adf0b55"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+QML = "2db162a6-7e43-52c3-8d84-290c1c42d82a"
 
 [compat]
-julia = "1.6.7"
 CoolProp = "0.2.0"
 DifferentialEquations = "7.14.0"
 ModelingToolkit = "9.46.1"
 Optimization = "4.0.3"
 OptimizationMetaheuristics = "0.3.0"
 Plots = "1.40.8"
+QML = "0.9.1"
+julia = "1.6.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
