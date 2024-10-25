@@ -3,7 +3,7 @@ module ThermoCycleSim
 # Write your package code here.
 
 using ModelingToolkit, CoolProp, DifferentialEquations, Plots
-
+using QML
 include("Utils.jl")
 include("Processes.jl")
 include("ThemodynamicClaculations.jl")
