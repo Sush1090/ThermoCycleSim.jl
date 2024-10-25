@@ -121,7 +121,7 @@ CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```julia
 CoolPropCycles.PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
 ```
-![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/PH_orc.png?raw=true)
+![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/PH_orc.png)
 ![Temperature-Entropy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/TS_orc.png?raw=true)
 
 ## Thermodynamic Cycle Optimization
