@@ -47,4 +47,4 @@ sol = solve(prob)
 
 #Check if the final state is close to the inital state. 
 Compute_cycle_error(sol,systems)
-ThermoCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
+ThermoCycleSim.PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
