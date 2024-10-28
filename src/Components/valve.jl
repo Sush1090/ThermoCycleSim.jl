@@ -117,9 +117,9 @@ end
 
 
 
-struct ThreePhaseValveSplit
+struct ThreeFacedValveSplit
 ratio::AbstractVector
-function ThreePhaseValveSplit(;ratio::AbstractVector)
+function ThreeFacedValveSplit(;ratio::AbstractVector)
     @assert isapprox(sum(ratio),1) "Sum of the ratio of mass flow rates should be 1"
     @assert size(ratio,1) == 2 "Only splits in two streams hence provide only two ratios"
     new(ratio)
@@ -131,7 +131,7 @@ end
 `Valve(type::ThreePhaseValveSplit;name,fluid=set_fluid)`
 
 """
-function Valve(type::ThreePhaseValveSplit;name,fluid=set_fluid)
+function Valve(type::ThreeFacedValveSplit;name,fluid=set_fluid)
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
@@ -198,7 +198,7 @@ end
 
 
 
-struct ThreePhaseValveCombine
+struct ThreeFacedValveCombine
 
 end
 
@@ -207,7 +207,7 @@ end
 `Valve(type::ThreePhaseValveSplit;name,fluid=set_fluid)`
 
 """
-function Valve(type::ThreePhaseValveCombine;name,fluid=set_fluid)
+function Valve(type::ThreeFacedValveCombine;name,fluid=set_fluid)
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
@@ -275,4 +275,4 @@ end
 
 
 
-export IsenthalpicExpansionValve, Valve, ThreePhaseValveSplit,ThreePhaseValveCombine
+export IsenthalpicExpansionValve, Valve, ThreeFacedValveSplit,ThreeFacedValveCombine

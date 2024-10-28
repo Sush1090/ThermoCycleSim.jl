@@ -179,8 +179,8 @@ end
     start_h = PropsSI("H","Q",0,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 
     @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
-    @named three_split = Valve(ThreePhaseValveSplit(ratio = [0.3,0.7]))
-    @named three_combine = Valve(ThreePhaseValveCombine())
+    @named three_split = Valve(ThreeFacedValveSplit(ratio = [0.3,0.7]))
+    @named three_combine = Valve(ThreeFacedValveCombine())
     @named sink = MassSink()
 
     eqs = [
