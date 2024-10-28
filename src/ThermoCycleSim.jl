@@ -1,4 +1,4 @@
-module ThermoCycleSim
+module CarnotCycles
 
 # Write your package code here.
 

@@ -1,9 +1,9 @@
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
 fluid = "R245fa"
-_system = Isentropic_η(η =1,πc =10.837370638360174) # fix the isentropic Efficiency of compressor and pressre ratio
+_system = Isentropic_η(η =0.9,πc =10.837370638360174) # fix the isentropic Efficiency of compressor and pressre ratio
 
 start_T =     280; # Temperature at source 
 start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 # pressure at source.
@@ -19,7 +19,7 @@ start_h = PropsSI("H","T",start_T,"P",start_p,fluid); start_mdot = 0.2 #kg/s
 @named exp = Expander(_system,fluid= fluid)
 @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
 @named sink = MassSink(fluid = fluid)
-@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=5)
+@named recp = Recuperator(RecuperatorORC(),fluid=fluid,ΔT_sat_diff=1)
 
 # Define equations
 eqs = [

@@ -1,6 +1,6 @@
 
 
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 

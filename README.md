@@ -1,4 +1,4 @@
-# ThermoCycleSim.jl
+# CarnotCycles.jl
 
 [![Build Status](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Sush1090/CoolPropCycles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
@@ -44,6 +44,7 @@ It provides the following components:
 5. Condensor
 6. Heat Source - Temperature independent
 7. Recuperator for the ORC
+8. Three-faced valve 
 
  <!-- It also provides basic functions that find the pressure to match the pitch points.  -->
 ## Installation
@@ -51,7 +52,7 @@ It provides the following components:
 In the Julia prompt, first type `]` and then:
 
 ```julia
-pkg> add https://github.com/Sush1090/ThermoCycleSim.jl.git
+pkg> add https://github.com/Sush1090/CarnotCycles.jl.git
 ```
 
 ## Basic Usage
@@ -65,7 +66,7 @@ Note: sign convention: Power supplied to the system is +ve while power generated
 Example of Organic Rankine Cycle using R134A
 
 ```julia
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
@@ -123,9 +124,9 @@ CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```julia
 CoolPropCycles.PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
 ```
-![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/PH_orc.svg)
+![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/CarnotCycles.jl/tree/main/Images/PH_orc.svg)
 
-![Temperature-Entropy Cycle Diagram](https://github.com/Sush1090/ThermoCycleSim.jl/tree/main/Images/TS_orc.svg)
+![Temperature-Entropy Cycle Diagram](https://github.com/Sush1090/CarnotCycles.jl/tree/main/Images/TS_orc.svg)
 
 ## Thermodynamic Cycle Optimization
 The cycles created can be wrapped with functions and sent to optimization routines. Most of the optimal solutions of purely theromodynamic systems lie at the boundary of constrains or saturation curve. Hence the initial box of constrain chosen has to be robust enough to have decent volume of feasible solutions.

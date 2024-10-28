@@ -1,11 +1,11 @@
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 using Test
 
 
 @testset "Global fluid setting" begin
     fluid = "R601"
     @load_fluid "R601"
-    @test ThermoCycleSim.set_fluid == fluid
+    @test CarnotCycles.set_fluid == fluid
 end
 
 @testset "Isentropic Process" begin
@@ -124,7 +124,7 @@ end
 end
 
 
-@testset "Valve" begin
+@testset "Valve - Isenthalpic" begin
     fluid = "R134A"
     @independent_variables t
     start_T = 300;

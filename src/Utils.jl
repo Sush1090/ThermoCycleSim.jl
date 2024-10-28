@@ -15,8 +15,8 @@ PhaseSI(name1::AbstractString, value1::Real, name2::AbstractString, value2::Real
 global set_fluid = nothing
 
 macro load_fluid(x::AbstractString)
-    ThermoCycleSim.set_fluid = x
-    return ThermoCycleSim.set_fluid
+    CarnotCycles.set_fluid = x
+    return CarnotCycles.set_fluid
 end
 export @load_fluid
 

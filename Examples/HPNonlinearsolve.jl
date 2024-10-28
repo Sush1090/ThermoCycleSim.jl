@@ -1,4 +1,4 @@
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 
@@ -35,7 +35,7 @@ function HPNLSolve(x,p)
     @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
 #Compute_cycle_error(sol,systems)
-ThermoCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems)
+CarnotCycles.PhasePlot(PhasePlotType_TS(),sol,systems)
 @show p - sol[cond.T_sat][1]
 err_p = (sol[source.p][1] - sol[sink.p][1])/sol[sink.p][1]
 err_h = (sol[source.h][1] - sol[sink.h][1])/sol[sink.h][1]
