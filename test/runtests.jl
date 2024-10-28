@@ -169,3 +169,36 @@ end
     v_out_isothermal = 1/PropsSI("D","H",h_out_isochoric,"P",p_in/πc,fluid)
     @test isapprox(v_out_isothermal,v_in)
 end
+
+@testset "Three-faced valve" begin
+    fluid = "R134A"
+    @load_fluid "R134A"
+    @independent_variables t
+    start_T = 300;
+    start_p = PropsSI("P","Q",0,"T",start_T,fluid) 
+    start_h = PropsSI("H","Q",0,"P",start_p,fluid); start_mdot = 0.2 #kg/s
+
+    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    @named three_split = Valve(ThreePhaseValveSplit(ratio = [0.3,0.7]))
+    @named three_combine = Valve(ThreePhaseValveCombine())
+    @named sink = MassSink()
+
+    eqs = [
+        connect(source.port,three_split.inport)
+        connect(three_split.outport1,three_combine.inport1)
+        connect(three_split.outport2,three_combine.inport2)
+        connect(three_combine.outport,sink.port)
+    ]
+    systems = [source,three_split,three_combine,sink]
+
+    @named three = ODESystem(eqs, t, systems=systems)
+    u0 = []
+    tspan = (0.0, 1.0)
+    sys = structural_simplify(three)
+    prob = ODEProblem(sys,u0,tspan)
+    sol = solve(prob)
+
+    @test isapprox(sol[source.p][1],sol[sink.p][1])
+    @test isapprox(sol[source.h][1],sol[sink.h][1])
+    @test isapprox(sol[source.mdot][1],sol[sink.mdot][1])
+end
