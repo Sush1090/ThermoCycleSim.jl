@@ -9,7 +9,7 @@ This package combines [ModelingToolkit.jl](https://github.com/SciML/ModelingTool
 2. Vapour Compression Cycle
 3. Brayton Cycle
 
-It is for steady state calculations, hence the evaporators and compressors are modeled using energy conservation. The principle is state-point manipulations.  The system works better for **subcritical cycle** parameters
+It is for steady state calculations, hence the evaporators and compressors are modeled using energy conservation. The principle is state-point manipulations.  The system works better for **subcritical cycle** parameters. One can also make custom cycles based on different processes.
 
 It is extendible as users can add their own component in the following manner 
 
