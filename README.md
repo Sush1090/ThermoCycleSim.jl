@@ -37,14 +37,14 @@ The `CoolantPort()` is fixed for the pressure `p`, enthalpy `h`, and mass flow r
 
 It provides the following components:
 
-1. Compressor using Isentropic Efficiency 
-2. Expander using Isentropic Efficiency
+1. Compressor using Isentropic, Isothermal and Isochoric processes
+2. Expander using Isentropic, Isothermal and Isochoric processes
 3. Isenthalpic Expander 
 4. Evaporator
 5. Condensor
 6. Heat Source - Temperature independent
 7. Recuperator for the ORC
-8. Three-faced valve 
+8. Three-faced valve based on mass flow rate spliting
 
  <!-- It also provides basic functions that find the pressure to match the pitch points.  -->
 ## Installation
