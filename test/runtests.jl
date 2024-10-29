@@ -151,7 +151,7 @@ end
     @test isapprox(sol[source.h][1],sol[sink.h][1]) 
 end
 
-@testset "Processes" begin
+@testset "Processes-expansion" begin
     fluid = "R134A"
     πc = 4
     p_in = 101325*πc; T_in = 450;
@@ -167,6 +167,25 @@ end
     @test isapprox(T_out_isothermal,T_in)
     h_out_isochoric = IsochoricExpansion(πc,h_in,p_in,fluid)
     v_out_isothermal = 1/PropsSI("D","H",h_out_isochoric,"P",p_in/πc,fluid)
+    @test isapprox(v_out_isothermal,v_in)
+end
+
+@testset "Processes-compression" begin
+    fluid = "Argon"
+    πc = 4
+    p_in = 101325; T_in = 450;
+    h_in = PropsSI("H","T",T_in,"P",p_in,fluid)
+    s_in =  PropsSI("S","T",T_in,"P",p_in,fluid)
+    v_in = 1/PropsSI("D","T",T_in,"P",p_in,fluid)
+
+    h_out_isen = IsentropicCompression(πc,h_in,p_in,fluid,1.0)
+    s_out_isen = PropsSI("S","H",h_out_isen,"P",p_in*πc,fluid)
+    @test isapprox(s_out_isen,s_in)
+    h_out_isothermal = IsothermalCompression(πc,h_in,p_in,fluid)
+    T_out_isothermal = PropsSI("T","H",h_out_isothermal,"P",p_in*πc,fluid)
+    @test isapprox(T_out_isothermal,T_in)
+    h_out_isochoric = IsochoricCompression(πc,h_in,p_in,fluid)
+    v_out_isothermal = 1/PropsSI("D","H",h_out_isochoric,"P",p_in*πc,fluid)
     @test isapprox(v_out_isothermal,v_in)
 end
 
