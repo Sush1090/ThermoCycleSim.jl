@@ -91,7 +91,7 @@ end
 export Isothermal_comp
 
 """
-`Compressor(type::Isothermal_comp=Isothermal_comp(πc = 5);name,fluid = set_fluid)`
+`Compressor(type::Isothermal_comp;name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isothermal_comp` contains --> pressure ratio 
@@ -165,7 +165,7 @@ struct Isochoric_comp
 end
 export Isochoric_comp
 """
-`Compressor(type::Isochoric_comp=Isochoric_comp(πc = 5);name,fluid = set_fluid)`
+`Compressor(type::Isochoric_comp;name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isothermal_comp` contains --> pressure ratio 

@@ -67,7 +67,7 @@ end
 
 
 """
-`Expander(type::Isothermal_comp=Isothermal_comp();name,fluid = set_fluid)`
+`Expander(type::Isothermal_comp;name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isothermal_comp` contains --> pressure ratio 
@@ -133,7 +133,7 @@ end
 
 
 """
-`Expander(type::Isochoric_comp=Isochoric_comp();name,fluid = set_fluid)`
+`Expander(type::Isochoric_comp;name,fluid = set_fluid)`
 
 *    Arguments: 
     1. `type` : `Isochoric_comp` contains --> pressure ratio 
