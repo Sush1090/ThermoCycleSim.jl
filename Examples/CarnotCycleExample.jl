@@ -34,3 +34,12 @@ sol = solve(prob)
 
 Compute_cycle_error(sol,systems)
 CarnotCycles.CyclePlot(PhasePlotType_TS(),sol,systems)
+
+Th = sol[isothermal_exp.T_in][1]
+Sa = sol[isothermal_exp.s_in][1]
+Sb = sol[isothermal_exp.s_out][1]
+Tc = sol[isentropic_exp.T_out][1]
+
+Qh = Th*(Sb - Sa); Qc = Tc*(Sa - Sb)
+
+@show η = (Qh + Qc)/Qh
