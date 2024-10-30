@@ -99,11 +99,11 @@ eqs = [
 ]
 systems=[source,comp,evap,exp,cond,sink] # Define system
 
-@named dis_test = ODESystem(eqs, t, systems=systems)
+@named ORC = ODESystem(eqs, t, systems=systems)
 
 u0 = []
 tspan = (0.0, 100.0)
-sys = structural_simplify(dis_test)
+sys = structural_simplify(ORC)
 prob = ODEProblem(sys,u0,tspan)
 sol = solve(prob)
 

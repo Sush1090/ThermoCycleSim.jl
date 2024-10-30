@@ -14,12 +14,18 @@ PhaseSI(name1::AbstractString, value1::Real, name2::AbstractString, value2::Real
 
 global set_fluid = nothing
 
+"""
+`@load_fluid` - fixes fluid for simulation through components
+"""
 macro load_fluid(x::AbstractString)
     CarnotCycles.set_fluid = x
     return CarnotCycles.set_fluid
 end
 export @load_fluid
 
+"""
+Collection of state point
+"""
 struct ThermoState
     mdot
     h
@@ -30,7 +36,9 @@ struct ThermoState
     end
 end
 export ThermoState
-
+"""
+    Initial state point to `MassSource`
+"""
 function initialize_state(;T_start=nothing,p_start=nothing,mdot=nothing,fluid = set_fluid)
     if isnothing(fluid) == true
         throw(error("Fluid not selected"))

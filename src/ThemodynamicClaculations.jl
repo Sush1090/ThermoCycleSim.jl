@@ -22,6 +22,9 @@ function Compute_cycle_error(p_source,h_source,p_sink,h_sink;reltol = 1e-8)
     return nothing
 end
 
+"""
+`Compute_cycle_error(sol::ODESolution,system::Vector{ODESystem};reltol = 1e-8)`
+"""
 function Compute_cycle_error(sol::ODESolution,system::Vector{ODESystem};reltol = 1e-8)
     source = system[1]; sink = system[end]
     h_source = sol[source.h][1]; p_source = sol[sink.p][1];
