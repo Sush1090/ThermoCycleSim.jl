@@ -452,7 +452,7 @@ export SimpleEvaporator, SuperHeat,Preheater,TwoPhaseEvap
 `Precooler(;name,Δp,fluid = set_fluid) `
     Precooler for the Condensor.     
 *    Arguments: 
-    1. `Δp`     : Pressure Drop across Evaporator
+    1. `Δp`     : Pressure Drop across Precooler
     
 *    Local Variables:
     1. `P`      : Power  
@@ -526,7 +526,7 @@ end
 `TwoPhaseCond(;name,Δp,fluid = set_fluid)`
     Twophase part for the Condensor.     
 *    Arguments: 
-    1. `Δp`     : Pressure Drop across Evaporator
+    1. `Δp`     : Pressure Drop across TwoPhaseCond
     
 *    Local Variables:
     1. `P`      : Power  
@@ -601,8 +601,8 @@ end
 `SuperCooler(;name,ΔT_sc,Δp,fluid = set_fluid) `
     SuperCooler part of the Condensor.
 *    Arguments: 
-    1. `Δp`     : Pressure Drop across Evaporator
-    2. `ΔT_sh`  : Super heated Temperature
+    1. `Δp`     : Pressure Drop across SuperCooler
+    2. `ΔT_sc`  : Super Cooler Temperature
     
 *    Local Variables:
     1. `P`      : Power  
@@ -678,8 +678,8 @@ end
 `SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_fluid) `
     Composed of multiple `ODESystem` - `Precooler`, `TwoPhaseCond`, and `SuperCooler`
 *    Arguments: 
-    1. `Δp`     : Pressure Drop across Evaporator
-    2. `ΔT_sh`  : Super heated Temperature
+    1. `Δp`     : Pressure Drop across SimpleCondensor
+    2. `ΔT_sc`  : Sub Cooler Temperature
     
 *    Local Variables:
     1. `P`      : Power  
@@ -757,5 +757,4 @@ function SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_
 compose(ODESystem(eqs, t, vars, para;name), inport,precooler,twophasecond,supercooler, outport)
 
 end
-
 export SimpleCondensor, Precooler, TwoPhaseCond, SuperCooler

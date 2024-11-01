@@ -124,10 +124,10 @@ sol = solve(prob)
 
 As of now the direct plotting of T-S and P-H phase diagram of the cycle is provided. It requires the `systems` to have the first as `MassSource(...)` and last variable as `MassSink(...)`.   
 ```julia
-CoolPropCycles.PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
+PhasePlot(PhasePlotType_TS(),sol,systems,fluid)
 ```
 ```julia
-CoolPropCycles.PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
+PhasePlot(PhasePlotType_PH(),sol,systems,fluid)
 ```
 ![Pressure-Enthalpy Cycle Diagram](https://github.com/Sush1090/CarnotCycles.jl/tree/main/Images/PH_orc.svg)
 
