@@ -160,9 +160,11 @@ function MassSink(;name,fluid = set_fluid)
    ]
    compose(ODESystem(eqs, t, vars, para;name),port)
 end
+"""
+`MassSink(state::ThermoState;name,fluid=set_fluid)`
 
+"""
 function MassSink(state::ThermoState;name,fluid=set_fluid)
-    #@unpack mdot,h,p,fluid = state
     @named    port = CoolantPort()
     para = @parameters begin
         
@@ -204,7 +206,7 @@ function ComputeSpecificLatentHeat(var1::AbstractString,value1,fluid::AbstractSt
 end
 @register_symbolic ComputeSpecificLatentHeat(var1::AbstractString,value1,fluid::AbstractString)
 
-export CoolantPort,CoolComponent,MassSource,MassSink,AmbientTemperature,AtmosphericPressure,ComputeSpecificLatentHeat
+export CoolantPort,CoolComponent,MassSink,AmbientTemperature,AtmosphericPressure,ComputeSpecificLatentHeat
 
 
 function MassSourceLiquid(;name,fluid=set_fluid,Δp_super = 1e3,source_mdot,source_temperature)
@@ -288,16 +290,20 @@ function MassSourceGas(;name,fluid=set_fluid,Δp_sub = 1e3,source_mdot,source_te
     compose(ODESystem(eqs, t, vars, para;name),port)
 end
 
+
+
 """
 `MassSource(type::Symbol; fluid= set_fluid,Δp_sub = nothing,Δp_super = nothing,source_mdot = nothing,source_temperature = nothing)`
 
 Initilize source with temperature and pressure away from saturation curve. Set type to be a symbol between `:liquid` or `:gas`.
-
-    `Δp_sub` is for pressure below saturation curve i.e. for gas as source state.
-
-    `Δp_super` is for pressure above saturation curve i.e. for liquid as source state.   
+*    Arguments: 
+    1. `Δp_sub`             : pressure below saturation curve i.e. for gas as source state.
+    2. `Δp_super`           : pressure above saturation curve i.e. for liquid as source state.   
+    3. `source_mdot`        : mass flow rate of the system
+    4. `source_temperature` : source temperature
+    5. `type`               : `:liquid` or `:gas`
 """
-function MassSource(type::Symbol; fluid= set_fluid,Δp_sub = nothing,Δp_super = nothing,source_mdot = nothing,source_temperature = nothing)
+function MassSource(type::Symbol; fluid= set_fluid,Δp_sub = nothing,Δp_super = nothing,source_mdot = nothing,source_temperature = nothing,name)
     if type == :liquid
        @named src = MassSourceLiquid(fluid=fluid,Δp_super = Δp_super,source_mdot = source_mdot,source_temperature = source_temperature)
        return src

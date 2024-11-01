@@ -304,3 +304,7 @@ end
     @test isapprox(sol[source.p][1],sol[sink.p][1])
 
 end
+
+@testset "MassSource initilizations" begin
+    
+end
