@@ -361,6 +361,16 @@ end
 
 
 """
+`CondensorParameterChecker(Δp,ΔT_sc)` Checks if the parameters chosen violate CoolProp assertions. 
+"""
+function EvaporatorParameterChecker(Δp,ΔT_sh)
+    @assert ΔT_sh >= 1e-3 "Keep superheat temperature away from Saturation curve to avoid CoolProp assertion errors"
+    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
+    return true
+end
+@register_symbolic EvaporatorParameterChecker(Δp::Array,ΔT_sh)
+
+"""
 `SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid = set_fluid)`
     Composed of multiple `ODESystem` - `Preheater`, `TwoPhaseEvap`, and `SuperHeat`
 *    Arguments: 
@@ -388,20 +398,13 @@ end
     4. `TwoPhaseEvap`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperHeat`      : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid = set_fluid) 
+function SimpleEvaporator(;name,fluid = set_fluid) 
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
-    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for preheater,twophase and superheatear"
-    @assert ΔT_sh > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
-    @named inport = CoolantPort()
-    @named preheater = Preheater(fluid = fluid,Δp= Δp[1]) 
-    @named twophase = TwoPhaseEvap(fluid = fluid,Δp= Δp[2])
-    @named superheater = SuperHeat(fluid = fluid,Δp= Δp[3],ΔT_sh = ΔT_sh)
-    @named outport = CoolantPort()
-
     para = @parameters begin
-
+        Δp[1:3] = [0,0,0]
+        ΔT_sh = 1
     end
     vars =  @variables begin
         P(t)
@@ -418,8 +421,17 @@ function SimpleEvaporator(;name,Δp::AbstractVector = [0,0,0],ΔT_sh,fluid = set
         ρ_out(t)
 
         T_sat(t)
+        var_checker(t)
     end
+    @named inport = CoolantPort()
+    @named preheater = Preheater(fluid = fluid,Δp= Δp[1]) 
+    @named twophase = TwoPhaseEvap(fluid = fluid,Δp= Δp[2])
+    @named superheater = SuperHeat(fluid = fluid,Δp= Δp[3],ΔT_sh = ΔT_sh)
+    @named outport = CoolantPort()
+
+
     eqs = [
+    var_checker ~ EvaporatorParameterChecker(Δp,ΔT_sh)
     connect(inport,preheater.inport)
     connect(preheater.outport,twophase.inport)
     connect(twophase.outport,superheater.inport)
@@ -673,6 +685,16 @@ function SuperCooler(;name,ΔT_sc,Δp,fluid = set_fluid)
 end
 
 
+"""
+`CondensorParameterChecker(Δp,ΔT_sc)` Checks if the parameters chosen violate CoolProp assertions. 
+"""
+function CondensorParameterChecker(Δp,ΔT_sc)
+    @assert ΔT_sc >= 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
+    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
+    return true
+end
+@register_symbolic CondensorParameterChecker(Δp::Array,ΔT_sc)
+
 
 """
 `SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_fluid) `
@@ -702,20 +724,13 @@ end
     4. `TwoPhaseCond`   : Component with internal `CoolantPort` --> `inport` and `outport`
     5. `SuperCooler`   : Component with internal `CoolantPort` --> `inport` and `outport`
 """
-function SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_fluid) 
+function SimpleCondensor(;name,fluid = set_fluid) 
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
-    @assert size(Δp,1) ==3 "pressure drop vector has to be of size 3 for Precooler,TwoPhaseCond and SuperCooler"
-    @assert ΔT_sc > 1e-3 "Keep subcooling temperature away from Saturation curve to avoid CoolProp assertion errors"
-    @named inport = CoolantPort()
-    @named precooler = Precooler(fluid = fluid,Δp= Δp[1]) 
-    @named twophasecond = TwoPhaseCond(fluid = fluid,Δp= Δp[2])
-    @named supercooler = SuperCooler(fluid = fluid,Δp= Δp[3],ΔT_sc = ΔT_sc)
-    @named outport = CoolantPort()
-
     para = @parameters begin
-
+        Δp_pre[1:3] = [0,0,0]
+        ΔT_sc = 1
     end
     vars =  @variables begin
         P(t)
@@ -732,8 +747,19 @@ function SimpleCondensor(;name,Δp::AbstractVector = [0,0,0],ΔT_sc,fluid = set_
         ρ_out(t)
 
         T_sat(t)
+
+        var_checker(t)
     end
+
+    @named inport = CoolantPort()
+    @named precooler = Precooler(fluid = fluid,Δp= Δp[1]) 
+    @named twophasecond = TwoPhaseCond(fluid = fluid,Δp= Δp[2])
+    @named supercooler = SuperCooler(fluid = fluid,Δp= Δp[3],ΔT_sc = ΔT_sc)
+    @named outport = CoolantPort()
+
+
     eqs = [
+    var_checker ~ CondensorParameterChecker(Δp,ΔT_sc)
     connect(inport,precooler.inport)
     connect(precooler.outport,twophasecond.inport)
     connect(twophasecond.outport,supercooler.inport)
@@ -758,3 +784,30 @@ compose(ODESystem(eqs, t, vars, para;name), inport,precooler,twophasecond,superc
 
 end
 export SimpleCondensor, Precooler, TwoPhaseCond, SuperCooler
+
+
+function Evaporator(;name,fluid=set_fluid)
+    if isnothing(fluid)
+        throw(error("Fluid not selected"))
+    end
+    @named inport = CoolantPort()
+    @named outport = CoolantPort()
+    vars = @variables begin
+        
+    end
+    para = @parameters begin
+        T_sat, [description = "Saturation Temperature (K)"]    
+        ΔTsh, [description = "Super heat temperature (K)"]
+    end
+
+    eqs = [
+        p_in ~ PropsSI("P","Q",1,"T",T_sat,fluid)
+        p_out ~ p_in
+        h_in ~ inport.h
+        p_in ~ inport.p
+        p_out ~ outport.p
+        
+    ]
+
+    compose(ODESystem(eqs, t, vars, para;name), inport, outport)
+end

@@ -34,7 +34,7 @@ end
 
 export Compute_cycle_error
 
-function PitchPoint()
+function ExternalPinching(T_in_left,p_in_left,fluid_left,T_in_right,p_in_right,fluid_right)
     
 end
 

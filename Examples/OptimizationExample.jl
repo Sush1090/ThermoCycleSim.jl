@@ -1,12 +1,12 @@
 using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
-global fluid = "Toluene"
+global fluid = "Cyclopentane"
 function ORC(x,p)
 
     @independent_variables t
-  
-    _system = Isentropic_η(η = 0.75,πc = x[2]) 
-    start_T = x[1]; # Temperature at source 
+    @load_fluid "Cyclopentane"
+    _system = Isentropic_η(η = 0.5,πc = 10.5) 
+    start_T = 273; # Temperature at source 
     start_p = PropsSI("P","Q",0,"T",start_T,fluid) + 1e3 
     ΔT_subcool = PropsSI("T","P",start_p,"Q",0,fluid) - start_T;
     @assert ΔT_subcool > 1e-3   
@@ -14,7 +14,7 @@ function ORC(x,p)
 
     @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot,fluid = fluid)
     @named comp = Compressor(_system, fluid =fluid)
-    @named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = x[3],fluid = fluid)
+    @named evap = SimpleEvaporator(Δp = [0,0,0],ΔT_sh = x[1],fluid = fluid)
     @named exp = Expander(_system,fluid= fluid)
     @named cond = SimpleCondensor(ΔT_sc = ΔT_subcool,Δp = [0,0,0],fluid = fluid)
     @named sink = MassSink(fluid = fluid)
@@ -50,7 +50,7 @@ function ORC(x,p)
     if sol[exp.T_out][1] <= sol[cond.T_sat][1] 
         penalty1 = abs(η)
     end
-    @assert p[1]>p[2]
+    #@assert p[1]>p[2]
     penalty2 = 0 # evaporator outlte temperature is desired to be less than p[1]
     if (sol[evap.T_out][1] > p[1])
         penalty2 = abs(η)
@@ -84,15 +84,15 @@ It is recommended to use Genetic Algorithms instead of Line search Algorithms.
 using Optimization, OptimizationMetaheuristics
 
 #[start_T,πc,T_sh]
-x0 = [300,5,2]
-p = [375,274]
+x0 = [5]
+p = [450]
 
 p_max_start = PropsSI("P","Q",1,"T",300,fluid) + 1e3
 p_crit = PropsSI("PCRIT",fluid)
 πc_min = p_crit/p_max_start
 
 f = OptimizationFunction(ORC)
-prob = Optimization.OptimizationProblem(f, x0, p, lb = [300, 1.1,2], ub = [300, πc_min,2])
+prob = Optimization.OptimizationProblem(f, x0, p, lb = [2.0], ub = [200.0])
 sol = solve(prob, DE(), maxiters = 50, maxtime = 100.0)
 
 if (f(sol.u,p) >=0)

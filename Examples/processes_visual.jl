@@ -1,16 +1,14 @@
 using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
-
-
 fluid = "Argon"
 @load_fluid "Argon"
 _system = Isentropic_η(η = 1,πc = 5)
-_isochoric = Isochoric_comp(πc = 5)
-_isothermal = Isothermal_comp(πc =5)
+_isochoric = Isochoric_comp(πc = 3)
+_isothermal = Isothermal_comp(πc =2)
 @independent_variables t
 start_T = 300;
 start_p = 101325
-start_h = PropsSI("H","T",start_T,"P",start_p,fluid);start_mdot = 0.2
+start_h = PropsSI("H","T",start_T,"P",start_p,"Argon");start_mdot = 0.2
 
 @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
 @named comp_isen = Compressor(_system)

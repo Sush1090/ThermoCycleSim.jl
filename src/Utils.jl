@@ -316,3 +316,36 @@ function MassSource(type::Symbol; fluid= set_fluid,Δp_sub = nothing,Δp_super =
 end
 
 export MassSourceGas, MassSourceLiquid, MassSource
+
+
+
+"""
+ Storage port that connect the storage HTF to the thermal storage
+"""
+@connector function StoragePort(;name)
+vars = @variables begin
+    T(t), [input = true,description ="Temperature of Storage HTF"]
+    p(t), [input = true,description ="Pressure of Storage HTF"]
+    mdot(t), [input = true,description ="Mass Flow Rate of Storage HTF"]
+end
+ODESystem(Equation[],t,vars,[],name=name)
+end
+
+export StoragePort
+
+@connector function EnergyPort(;name)
+    vars = @variables begin
+        P(t), [input = true,description ="power Supplied"]
+    end
+    ODESystem(Equation[],t,vars,[],name=name)
+end
+
+@connector function AmbientNode(;node)
+    vars = @variables begin
+        T(t), [input = true,description ="Ambient Temperature"]
+    end
+    ODESystem(Equation[],t,vars,[],name=name)
+end
+
+export EnergyPort, AmbientNode
+

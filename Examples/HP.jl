@@ -1,20 +1,28 @@
 
 
-using ThermoCycleSim, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
 
 
 @independent_variables t
-@load_fluid "R134A"
-_system = Isentropic_η(η = 1,πc = 3.35) # fix the isentropic Efficiency of compressor and pressre ratio
-valve_system  = IsenthalpicExpansionValve(3.35)
-start_T = 273.15; # Temperature at source 
-    start_p = PropsSI("P","Q",1,"T",start_T-10,fluid) - 1e2 #2*101325 #PropsSI("P","Q",1,"T",start_T-10,fluid) - 1e2 # pressure at source. For HP we need gas at source
-    @assert PhaseSI("T",start_T,"P",start_p,"R134A") == "gas"
-    ΔT_superheat = start_T - PropsSI("T","P",start_p,"Q",0,"R134A") ; # ensure the superheat temperature to reach bck to starting state.
-    start_h = PropsSI("H","T",start_T,"P",start_p,"R134A"); start_mdot = 0.2 #kg/s
+#fluid = "R1234YF"
+@load_fluid "Propane"
+πc = 1.8
+_system = Isentropic_η(η = 0.7,πc = πc) # fix the isentropic Efficiency of compressor and pressre ratio
+valve_system  = IsenthalpicExpansionValve(πc)
 
+    start_T = 273+60; # Temperature at source 
+    # start_p = PropsSI("P","Q",1,"T",start_T-10,fluid) - 1e2
+    # p_crit = PropsSI("PCRIT",fluid)
+    # if (πc*start_p >= p_crit)
+    #     throw(error("Pressure is in super-critical zone. Put parameters for sub-critical cycle"))
+    # end
+    # @assert PhaseSI("T",start_T,"P",start_p,fluid) == "gas"
+    ΔT_superheat = 6.713304480203021 #start_T - PropsSI("T","P",start_p,"Q",0,fluid) ; # ensure the superheat temperature to reach bck to starting state.
+    start_mdot = 0.0407 #kg/s
 
-    @named source = MassSource(source_enthalpy = start_h,source_pressure = start_p,source_mdot = start_mdot)
+    #state_src = initialize_state(T_start = start_T,p_start=start_p,mdot = start_mdot)
+
+    @named source = MassSource(:gas,Δp_sub = 2e5,source_mdot = start_mdot,source_temperature = start_T)
     @named comp = Compressor(_system)
     @named cond = SimpleCondensor(ΔT_sc = 2,Δp = [0,0,0])
     @named expander = Valve(valve_system)
@@ -31,15 +39,17 @@ start_T = 273.15; # Temperature at source
     systems=[source,comp,cond,expander,evap,sink] # Define system
 
     @named hp = ODESystem(eqs, t, systems=systems)
-
+    tspan = (0,10)
     u0 = []
-    tspan = (0.0, 10.0)
     sys = structural_simplify(hp)
     prob = ODEProblem(sys,u0,tspan)
     sol = solve(prob)
 
     @show COP = sol[cond.P][1]/sol[comp.P][1]
 #Check if the final state is close to the inital state. 
-Compute_cycle_error(sol,systems)
-#ThermoCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems)
-ThermoCycleSim.PhasePlot(PhasePlotType_TS(),sol,systems)
+Compute_cycle_error(sol,systems,reltol = 1e-3)
+#CarnotCycles.PhasePlot(PhasePlotType_TS(),sol,systems)
+fig1 = CarnotCycles.PhasePlot(PhasePlotType_TS(),sol,systems)
+fig2 = CarnotCycles.PhasePlot(PhasePlotType_PH(),sol,systems)
+@show sol[evap.T_sat]
+@show sol[cond.T_sat]

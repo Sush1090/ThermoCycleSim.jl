@@ -26,11 +26,12 @@ function Expander(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid)
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
-    @unpack η,πc = type
+    # @unpack η,πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
-        
+        η, [description = "Isentropic Effeciency"]
+        πc, [description = "Pressure ratio"]
     end
     vars = @variables begin
         P(t)
@@ -93,11 +94,11 @@ function Expander(type::Isothermal_comp;name,fluid = set_fluid)
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
-    @unpack πc = type
+    # @unpack πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
-        
+        πc, [description = "Pressure ratio"]
     end
     vars = @variables begin
         P(t)
@@ -159,11 +160,11 @@ function Expander(type::Isochoric_comp;name,fluid = set_fluid)
     if isnothing(fluid)
         throw(error("Fluid not selected"))
     end
-    @unpack πc = type
+    # @unpack πc = type
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
-        
+        πc, [description = "Pressure ratio"]
     end
     vars = @variables begin
         P(t)
