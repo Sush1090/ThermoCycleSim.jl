@@ -45,7 +45,7 @@ function Compressor(type::Isentropic_η=Isentropic_η();name,fluid = set_fluid)
     @named inport = CoolantPort()
     @named outport = CoolantPort()
     para = @parameters begin
-        η, [description = "Isentropic Effeciency"]
+        η=0.8, [description = "Isentropic Effeciency",bounds = (0.0,1.0)]
         πc, [description = "Pressure ratio"]
     end
     vars = @variables begin

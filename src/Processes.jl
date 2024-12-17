@@ -20,7 +20,7 @@ function IsentropicCompression(πc, h_in, p_in,fluid,η)
     h_out = h_in  + (h_is -h_in)/η
     return h_out
 end
-@register_symbolic IsentropicCompression(πc, h_in, p_in,fluid,η)
+@register_symbolic IsentropicCompression(πc, h_in, p_in,fluid::String,η)
 export IsentropicCompression
 
 
@@ -43,7 +43,7 @@ function IsentropicExpansion(πc, h_in, p_in,fluid,η)
     h_out = h_in  - η*(h_in - h_is)
     return h_out
 end
-@register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid,η)
+@register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid::AbstractString,η)
 export IsentropicExpansion
 
 
@@ -63,7 +63,7 @@ function IsochoricCompression(πc, h_in, p_in,fluid)
     h_out =  PropsSI("H", "D", 1/v_in, "P", πc*p_in, fluid)
     return h_out
 end
-@register_symbolic IsochoricCompression(πc, h_in, p_in,fluid)
+@register_symbolic IsochoricCompression(πc, h_in, p_in,fluid::AbstractString)
 export IsochoricCompression
 
 
@@ -84,7 +84,7 @@ function IsochoricExpansion(πc, h_in, p_in,fluid)
     h_out =  PropsSI("H", "D", 1/v_in, "P", p_in/πc, fluid)
     return h_out
 end
-@register_symbolic IsochoricExpansion(πc, h_in, p_in,fluid)
+@register_symbolic IsochoricExpansion(πc, h_in, p_in,fluid::AbstractString)
 export IsochoricExpansion
 
 
@@ -104,7 +104,7 @@ function IsothermalCompression(πc, h_in, p_in,fluid)
     h_out = PropsSI("H", "T", T_in, "P",πc*p_in, fluid)
     return h_out
 end
-@register_symbolic IsothermalCompression(πc, h_in, p_in,fluid)
+@register_symbolic IsothermalCompression(πc, h_in, p_in,fluid::AbstractString)
 export IsothermalCompression
 
 
@@ -125,7 +125,7 @@ function IsothermalExpansion(πc, h_in, p_in,fluid)
     h_out = PropsSI("H", "T", T_in, "P", p_in/πc, fluid)
     return h_out
 end
-@register_symbolic IsothermalExpansion(πc, h_in, p_in,fluid)
+@register_symbolic IsothermalExpansion(πc, h_in, p_in,fluid::AbstractString)
 export IsothermalExpansion
 
 
