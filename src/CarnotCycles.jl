@@ -3,6 +3,10 @@ module CarnotCycles
 # Write your package code here.
 
 using ModelingToolkit, CoolProp, DifferentialEquations, Plots
+using Clapeyron
+import Clapeyron.PH
+
+include("ClapeyronRegistrations.jl")
 
 include("Utils.jl")
 include("Processes.jl")
