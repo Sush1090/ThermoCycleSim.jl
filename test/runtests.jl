@@ -1,11 +1,16 @@
-using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp
+using CarnotCycles, ModelingToolkit, DifferentialEquations, CoolProp, Clapeyron
 using Test
 
 
 @testset "Global fluid setting" begin
     fluid = "R601"
-    @load_fluid "R601"
+    load_fluid("R601")
     @test CarnotCycles.set_fluid == fluid
+
+    model = cPR(["ethane"])
+    load_fluid(model)
+    @test CarnotCycles.set_fluid isa EoSModel
+    @test CarnotCycles.Nc == size(model.components,1)
 end
 
 @testset "Isentropic Process" begin

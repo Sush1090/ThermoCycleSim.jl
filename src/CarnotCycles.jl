@@ -5,6 +5,8 @@ module CarnotCycles
 using ModelingToolkit, CoolProp, DifferentialEquations, Plots
 using Clapeyron
 import Clapeyron.PH
+import Clapeyron.PS
+import ModelingToolkit:scalarize
 
 include("ClapeyronRegistrations.jl")
 

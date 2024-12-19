@@ -23,7 +23,15 @@ end
 @register_symbolic IsentropicCompression(πc, h_in, p_in,fluid::String,η)
 export IsentropicCompression
 
-
+function IsentropicCompressionClapeyron(πc, h_in, p_in,z,fluid::EoSModel,η)
+    @assert η <= 1 "Efficiency more than 1"
+    s_in =  ph_entropy(fluid,p_in,h_in,z)
+    h_is =  ps_enthalpy(fluid,p_in*πc,s_in,z)
+    h_out = h_in  + (h_is -h_in)/η
+    return h_out
+end
+@register_symbolic IsentropicCompressionClapeyron(πc, h_in, p_in,z,fluid::EoSModel,η)
+export IsentropicCompressionClapeyron
 """
 `IsentropicExpansion(πc, h_in, p_in,fluid,η)`
 
@@ -46,6 +54,16 @@ end
 @register_symbolic IsentropicExpansion(πc, h_in, p_in,fluid::AbstractString,η)
 export IsentropicExpansion
 
+function IsentropicExpansionClapeyron(πc, h_in, p_in,z,fluid::EoSModel,η)
+    @assert η <= 1 "Efficiency more than 1"
+    s_in =  ph_entropy(fluid,p_in,h_in,z)
+    h_is =  ps_enthalpy(fluid,p_in/πc,s_in,z)
+    h_out = h_in  - η*(h_in - h_is)
+    return h_out
+end
+@register_symbolic IsentropicExpansionClapeyron(πc, h_in, p_in,z,fluid::EoSModel,η)
+export IsentropicExpansionClapeyron
+
 
 """
 `IsochoricCompression(πc, h_in, p_in,fluid)`
@@ -65,8 +83,6 @@ function IsochoricCompression(πc, h_in, p_in,fluid)
 end
 @register_symbolic IsochoricCompression(πc, h_in, p_in,fluid::AbstractString)
 export IsochoricCompression
-
-
 
 """
 `IsochoricExpansion(πc, h_in, p_in,fluid)`
@@ -107,6 +123,21 @@ end
 @register_symbolic IsothermalCompression(πc, h_in, p_in,fluid::AbstractString)
 export IsothermalCompression
 
+function IsothermalCompressionClapeyron(πc, h_in, p_in,z,fluid::EoSModel)
+    T_in =  ph_temperature(fluid,p_in,h_in,z)
+    h_out = pt_enthalpy(fluid,p_in*πc,T_in,z)
+    return h_out
+end
+@register_symbolic IsothermalCompressionClapeyron(πc, h_in, p_in,z,fluid::EoSModel)
+export IsothermalCompressionClapeyron
+
+function IsothermalExpansionClapeyron(πc, h_in, p_in,z,fluid::EoSModel)
+    T_in =  ph_temperature(fluid,p_in,h_in,z)
+    h_out = pt_enthalpy(fluid,p_in/πc,T_in,z)
+    return h_out
+end
+@register_symbolic IsothermalExpansionClapeyron(πc, h_in, p_in,z,fluid::EoSModel)
+export IsothermalExpansionClapeyron
 
 
 """

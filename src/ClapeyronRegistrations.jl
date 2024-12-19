@@ -1,5 +1,11 @@
 
 begin 
+pt_entropy(model::EoSModel,p,T,z) = Clapeyron.entropy(model::EoSModel,p,T,z,phase = "unknown")
+@register_symbolic pt_entropy(model::EoSModel,p,T,z::Array)
+
+pt_enthalpy(model::EoSModel,p,T,z) = Clapeyron.enthalpy(model::EoSModel,p,T,z,phase = "unknown")
+@register_symbolic pt_enthalpy(model::EoSModel,p,T,z::Array)
+
 ph_temperature(model::EoSModel,p,h,z) = PH.temperature(model::EoSModel,p,h,z,phase = "unknown")
 @register_symbolic ph_temperature(model::EoSModel,p,h,z::Array)
 
@@ -8,6 +14,15 @@ ph_entropy(model::EoSModel,p,h,z) = PH.entropy(model::EoSModel,p,h,z,phase = "un
 
 ph_mass_density(model::EoSModel,p,h,z) = PH.mass_density(model::EoSModel,p,h,z,phase = "unkown")
 @register_symbolic ph_mass_density(model::EoSModel,p,h,z::Array)
+
+ph_volume(model::EoSModel,p,h,z) = PH.volume(model::EoSModel,p,h,z,phase = "unkown")
+@register_symbolic ph_volume(model::EoSModel,p,h,z::Array)
+
+ps_temperature(model::EoSModel,p,s,z) = PS.temperature(model::EoSModel,p,s,z,phase = "unknown")
+@register_symbolic ps_temperature(model::EoSModel,p,s,z::Array)
+
+ps_enthalpy(model::EoSModel,p,s,z) = PS.enthalpy(model::EoSModel,p,s,z,phase = "unknown")
+@register_symbolic ps_enthalpy(model::EoSModel,p,s,z::Array)
 
 Tproperty_S(model::EoSModel,p,s,z) = Clapeyron.Tproperty(model::EoSModel,p,s,z,entropy,phase = "unkown")
 @register_symbolic Tproperty_S(model::EoSModel,p,s,z::Array)

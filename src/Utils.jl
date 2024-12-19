@@ -36,7 +36,7 @@ export load_fluid
 
 function Show_fluid_details(fluid=set_fluid)
     if set_fluid isa AbstractString
-        
+
     end
 end
 export Show_fluid_details
@@ -68,7 +68,7 @@ end
     vars = @variables begin 
         p(t),  [description = "Pressure (Pa)",input = true]
         h(t), [description = "Enthalpy (J/kg)",input = true]
-        z(t)[1:Nc], [description = "mole Flow Rate (mole/s)",input = true] 
+        z(t)[1:Nc], [description = "Molar Flow Rate (mole/s)",input = true] 
     end
     return ODESystem(Equation[], t, vars, [];name=name)
 end
@@ -173,31 +173,31 @@ end
 @component function MassSourceClapeyron(;name, fluid = set_fluid,Nc = Nc) 
     @named port = CoolantPort()
     para = @parameters begin
-        source_pressure(t) = 101305.0
-        source_enthalpy(t) = 100
-        source_z(t)[1:Nc]  = ones(Nc)
+        source_pressure(t) = 101305.0, [description = "Pressure at source (Pa)"]
+        source_enthalpy(t) = 100, [description = "Enthalpy at source (J)"]
+        source_z(t)[1:Nc]  = ones(Nc) , [description = "Moles at source (-)"]
     end
     vars = @variables begin
-        z(t)[1:Nc]
-        s(t)
-        p(t)
-        T(t)
-        h(t)
-        ρ(t)
+        z(t)[1:Nc] , [description = "Moles (-)"]
+        s(t), [description = "Entropy (J/mol.K)"]
+        p(t), [description = "Pressure (Pa)"]
+        T(t), [description = "Temperature (K)"]
+        h(t), [description = "Enthalpy (J)"]
+        ρ(t), [description = "Total Density (kg)"]
      end
 
     eqs = [
-        port.z ~ source_z # Outflow is negative
+        scalarize(port.z .~ source_z) # Outflow is negative
         port.p ~ source_pressure
         port.h ~ source_enthalpy
-        z ~ port.z
+        scalarize(z .~ port.z)
         s ~ ph_entropy(fluid,p,h,z)
         p ~ port.p
         T ~ ph_temperature(fluid,p,h,z)
         h ~ port.h
         ρ ~ ph_mass_density(fluid,p,h,z)
     ]
-    compose(ODESystem(eqs, t, vars, para;name),port)
+    compose(ODESystem(eqs, t, collect(Iterators.flatten(vars)), para;name),port)
 end
 
 
@@ -267,14 +267,14 @@ end
        eqs = [
         port.p ~ p
         port.h ~ h
-        z ~ port.z
+        scalarize(z .~ port.z)
         s ~ ph_entropy(fluid,p,h,z)
         p ~ port.p
         T ~ ph_temperature(fluid,p,h,z)
         h ~ port.h
         ρ ~ ph_mass_density(fluid,p,h,z)
        ]
-       compose(ODESystem(eqs, t, vars, para;name),port)
+       compose(ODESystem(eqs, t, collect(Iterators.flatten(vars)), para;name),port)
 end
 
 
